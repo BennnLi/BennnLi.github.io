@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:nth-child(of S) 最后 N 个</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 选中最后 1 个 .visible ========== */
+.visible:nth-last-child(1 of .visible) {
+  border-bottom: none;
+  background: #c8e6c9;
+}
+
+/* ========== 选中倒数第 2 个 .item ========== */
+.item:nth-last-child(2 of .item) {
+  margin-bottom: 0;
+  background: #bbdefb;
+}
+
+/* ========== 演示 ========== */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+li {
+  padding: 12px 16px;
+  margin: 4px 0;
+  border-radius: 4px;
+  background: #f8f9fa;
+  border-bottom: 2px solid #ddd;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.hidden {
+  opacity: 0.5;
+  font-style: italic;
+  border-bottom: none;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:nth-child(of S) 最后 N 个</strong> — 选中最后 N 个特定元素
+</div>
+
+<div class="container">
+  <h2>1. 选中最后 1 个 .visible</h2>
+  <p class="code">.visible:nth-last-child(1 of .visible) { border-bottom: none; background: #c8e6c9; }</p>
+  <ul>
+    <li class="visible">项目 1</li>
+    <li class="visible">项目 2</li>
+    <li class="hidden">项目 3（hidden）</li>
+    <li class="visible">项目 4（最后 visible - 选中）</li>
+    <li class="visible">项目 5</li>
+  </ul>
+</div>
+
+<div class="container">
+  <h2>2. 选中倒数第 2 个 .item</h2>
+  <p class="code">.item:nth-last-child(2 of .item) { margin-bottom: 0; background: #bbdefb; }</p>
+  <ul>
+    <li class="item">项目 1</li>
+    <li class="item">项目 2</li>
+    <li class="item">项目 3（倒数第 2 - 选中）</li>
+    <li class="item">项目 4</li>
+    <li class="item">项目 5</li>
+  </ul>
+</div>
+
+</body>
+</html>

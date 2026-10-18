@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@container 命名容器</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+/* 外层容器：命名 outer，宽 500px */
+.outer {
+  container-type: inline-size;
+  container-name: outer;
+  width: 500px;
+  border: 2px dashed #999;
+  padding: 12px;
+}
+
+/* 内层容器：命名 inner，宽 300px */
+.inner {
+  container-type: inline-size;
+  container-name: inner;
+  width: 300px;
+  border: 2px dashed #1a73e8;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.box { padding: 10px; background: #f0f0f0; border-radius: 6px; margin-bottom: 10px; }
+
+/* 查名为 outer 的容器（≥ 400px 成立） */
+@container outer (min-width: 400px) {
+  .a { background: #28a745; color: white; }
+}
+
+/* 查名为 inner 的容器（300px，≥ 400px 不成立） */
+@container inner (min-width: 400px) {
+  .b { background: #dc3545; color: white; }
+}
+</style>
+</head>
+<body>
+
+<div class="outer">
+  outer = 500px
+
+  <div class="box a">
+    A：查 outer → 500px ≥ 400px，背景变绿 ✓
+  </div>
+
+  <div class="inner">
+    inner = 300px
+
+    <div class="box b">
+      B：查 inner → 300px < 400px，不会变红 ✗
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@supports not 回退</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+/* 默认样式（能被所有浏览器理解） */
+.box { padding: 16px; background: #eee; border-radius: 8px; }
+
+/* 不支持 aspect-ratio 时：用 padding-top 老办法撑出 16:9 */
+@supports not (aspect-ratio: 1) {
+  .video {
+    position: relative;
+    padding-top: 56.25%;
+    background: #ffcdd2;
+  }
+  .video::after {
+    content: '旧方案：padding-top 撑高';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* 支持 aspect-ratio 时：一行搞定 */
+@supports (aspect-ratio: 1) {
+  .video {
+    aspect-ratio: 16 / 9;
+    background: #c8e6c9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .video::after { content: '新方案：aspect-ratio'; }
+}
+
+.video { border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<p>浏览器支持 <code>aspect-ratio</code>，所以走"新方案"（绿底）。两个分支只会生效一个：</p>
+
+<div class="box">
+  <div class="video"></div>
+</div>
+
+</body>
+</html>

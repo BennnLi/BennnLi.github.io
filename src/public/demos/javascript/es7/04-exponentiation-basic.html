@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>幂运算符基础</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 10px; font-size: 15px; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+pre { background: #262b33; color: #e0e0e0; padding: 12px; border-radius: 6px;
+      font-size: 12px; margin: 8px 0; overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 14px; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; }
+th { background: #f8f9fa; }
+.mono { font-family: monospace; font-size: 13px; }
+.same { color: #28a745; }
+</style>
+</head>
+<body>
+
+<h3>两种写法，完全等价</h3>
+<pre>Math.pow(2, 10)   // 以前
+2 ** 10           // 现在</pre>
+
+<button onclick="run()">运行对比</button>
+
+<div id="result"></div>
+
+<script>
+const cases = [
+  [2, 10], [3, 3], [10, -2], [2, 0], [0, 0], [2.5, 2], [9, 0.5], [-8, 1 / 3]
+]
+
+function run() {
+  let html = `<table>
+    <thead><tr><th>a</th><th>b</th><th>Math.pow(a, b)</th><th>a ** b</th><th>一致</th></tr></thead><tbody>`
+
+  for (const [a, b] of cases) {
+    const p = Math.pow(a, b)
+    const e = a ** b
+    // 注意：负数开分数次幂会得到 NaN，而 NaN !== NaN，
+    // 所以要用 Object.is 判断，否则会误报"不一致"
+    const same = Object.is(p, e)
+    html += `<tr>
+      <td class="mono">${a}</td>
+      <td class="mono">${b}</td>
+      <td class="mono">${p}</td>
+      <td class="mono">${e}</td>
+      <td class="${same ? 'same' : ''}">${same ? '✓' : '✗'}</td>
+    </tr>`
+  }
+
+  html += `</tbody></table>
+  <p style="font-size:13px;color:#666;margin-top:12px">
+    数值行为完全一致，<code>**</code> 只是更短的写法 —— 可以放心替换。<br>
+    最后一行是负数开分数次幂，两者都返回 <code>NaN</code>（这属于数学上的复数范围，JS 表示不了）。
+  </p>`
+
+  document.getElementById('result').innerHTML = html
+}
+
+run()
+</script>
+
+</body>
+</html>

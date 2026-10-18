@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@container 基础</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+/* 1. 声明容器 */
+.box {
+  container-type: inline-size;
+  resize: horizontal;      /* 可拖动改宽度，方便观察 */
+  overflow: auto;
+  width: 300px;
+  max-width: 100%;
+  border: 2px dashed #1a73e8;
+  padding: 16px;
+}
+
+.text { font-size: 14px; color: #333; }
+
+/* 2. 容器宽度 ≥ 400px 时改样式 */
+@container (min-width: 400px) {
+  .text {
+    font-size: 24px;
+    color: red;
+    font-weight: bold;
+  }
+}
+</style>
+</head>
+<body>
+
+<p>拖动虚线框右下角改变宽度：</p>
+
+<div class="box">
+  <div class="text">容器窄时是黑色小字，容器 ≥ 400px 时变成红色大字</div>
+</div>
+
+</body>
+</html>

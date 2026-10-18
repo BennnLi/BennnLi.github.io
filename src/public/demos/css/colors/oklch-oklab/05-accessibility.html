@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>oklch() 无障碍对比度</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 无障碍对比度示例 ========== */
+.contrast-demo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.contrast-box {
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.contrast-box h3 {
+  margin-top: 0;
+}
+
+.contrast-box p {
+  margin-bottom: 0;
+}
+
+/* 深色背景 + 浅色文字 */
+.dark-bg {
+  background: oklch(0.2 0.1 250);
+  color: oklch(0.95 0.02 250);
+}
+
+/* 浅色背景 + 深色文字 */
+.light-bg {
+  background: oklch(0.95 0.02 250);
+  color: oklch(0.2 0.1 250);
+}
+
+/* 高对比度 */
+.high-contrast {
+  background: oklch(0.1 0.05 250);
+  color: oklch(0.98 0.01 250);
+}
+
+/* 低对比度（不推荐） */
+.low-contrast {
+  background: oklch(0.5 0.1 250);
+  color: oklch(0.6 0.1 250);
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #d4edda;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #155724;
+}
+
+.warning {
+  background: #fff3cd;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #856404;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>oklch() 无障碍对比度</strong> — 用 oklch() 确保文字与背景的对比度
+</div>
+
+<div class="container">
+  <h2>1. 推荐的对比度组合</h2>
+  <p class="code">background: oklch(0.2 0.1 250); color: oklch(0.95 0.02 250);</p>
+  <div class="contrast-demo">
+    <div class="contrast-box dark-bg">
+      <h3>深色背景</h3>
+      <p>浅色文字 — 对比度良好</p>
+    </div>
+    <div class="contrast-box light-bg">
+      <h3>浅色背景</h3>
+      <p>深色文字 — 对比度良好</p>
+    </div>
+  </div>
+  <div class="note">
+    <strong>技巧：</strong>背景和文字的亮度（L）差异越大，对比度越高。建议差异至少 0.5。
+  </div>
+</div>
+
+<div class="container">
+  <h2>2. 高对比度 vs 低对比度</h2>
+  <div class="contrast-demo">
+    <div class="contrast-box high-contrast">
+      <h3>高对比度</h3>
+      <p>亮度差 0.88 — 无障碍友好</p>
+    </div>
+    <div class="contrast-box low-contrast">
+      <h3>低对比度</h3>
+      <p>亮度差 0.1 — 不推荐</p>
+    </div>
+  </div>
+  <div class="warning">
+    <strong>注意：</strong>低对比度会影响可读性，尤其对视力障碍用户。WCAG 2.1 要求正常文字对比度至少 4.5:1。
+  </div>
+</div>
+
+</body>
+</html>

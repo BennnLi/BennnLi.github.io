@@ -1,0 +1,5 @@
+/* 默认：亮色主题 */
+@import url('./theme-light.css');
+
+/* 系统偏好暗色时：加载暗色主题覆盖 */
+@import url('./theme-dark.css') (prefers-color-scheme: dark);

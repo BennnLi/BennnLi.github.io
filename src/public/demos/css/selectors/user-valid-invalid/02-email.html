@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:user-valid / :user-invalid 邮箱验证</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 邮箱验证样式 ========== */
+input[type="email"]:user-valid {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+input[type="email"]:user-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* ========== 提示文字 ========== */
+.hint {
+  margin-top: 8px;
+  font-size: 14px;
+  display: none;
+}
+
+input:user-valid + .hint {
+  color: #28a745;
+  display: block;
+}
+
+input:user-invalid + .hint {
+  color: #dc3545;
+  display: block;
+}
+
+/* ========== 演示 ========== */
+.form-group {
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:user-valid / :user-invalid 邮箱验证</strong> — 邮箱格式验证样式
+</div>
+
+<div class="container">
+  <h2>邮箱验证示例</h2>
+  <p class="code">input[type="email"]:user-valid { border-color: #28a745; box-shadow: ...; }</p>
+
+  <div class="form-group">
+    <label>邮箱地址</label>
+    <input type="email" required placeholder="请输入邮箱，如 user@example.com">
+    <div class="hint">请输入有效的邮箱地址</div>
+  </div>
+
+  <div class="form-group">
+    <label>确认邮箱</label>
+    <input type="email" required placeholder="请再次输入邮箱">
+    <div class="hint">请输入有效的邮箱地址</div>
+  </div>
+</div>
+
+</body>
+</html>

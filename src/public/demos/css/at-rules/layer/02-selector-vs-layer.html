@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@layer — 层优先级 vs 选择器特异性</title>
+<style>
+/* 层顺序：low 在前（优先级低），high 在后（优先级高） */
+@layer low, high;
+
+/* ---------- high 层（优先级高，但选择器简单） ---------- */
+@layer high {
+  .box { color: red; }
+}
+
+/* ---------- low 层（优先级低，但选择器特异性高） ---------- */
+@layer low {
+  div.box#main { color: blue; }  /* 特异性再高也没用！ */
+}
+
+body {
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.box {
+  font-size: 24px; font-weight: bold;
+  padding: 30px; border-radius: 8px;
+  background: #fff;
+}
+</style>
+</head>
+<body>
+
+<div class="box" id="main">
+  红色文字 —— high 层胜出，尽管 low 层的选择器特异性更高
+</div>
+
+</body>
+</html>

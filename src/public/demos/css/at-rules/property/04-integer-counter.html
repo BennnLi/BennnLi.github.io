@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@property — 整数计数器</title>
+<style>
+/* ========== 注册整数类型，配合 counter-reset 做数字动画 ========== */
+@property --count {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #0f172a;
+  color: #e2e8f0;
+  text-align: center;
+}
+
+.counter {
+  --count: 0;
+  font-size: 80px;
+  font-weight: 900;
+  color: #38bdf8;
+}
+
+.counter::after {
+  counter-reset: num var(--count);
+  content: counter(num);
+}
+
+.counter.animate {
+  animation: count-up 2s ease-out forwards;
+}
+
+@keyframes count-up {
+  from { --count: 0; }
+  to   { --count: 9999; }
+}
+</style>
+</head>
+<body>
+
+<p><code>syntax: '&lt;integer&gt;'</code> + <code>counter-reset</code> 实现纯 CSS 数字滚动</p>
+<div class="counter animate"></div>
+<div class="counter animate"></div>
+</body>
+</html>

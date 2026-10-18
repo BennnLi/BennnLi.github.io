@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@layer 基础 — 层优先级</title>
+<style>
+/* ========== 1. 声明层顺序（越靠后优先级越高） ========== */
+@layer reset, base, components;
+
+/* ========== 2. reset 层（最先声明，优先级最低） ========== */
+@layer reset {
+  .box {
+    color: gray;
+    border: 2px dashed #ccc;
+  }
+}
+
+/* ========== 3. base 层 ========== */
+@layer base {
+  .box {
+    color: blue;
+    border: 2px solid blue;
+  }
+}
+
+/* ========== 4. components 层（最后声明，优先级最高） ========== */
+@layer components {
+  .box {
+    color: green;
+    border: 2px solid green;
+  }
+}
+
+/* ========== 布局样式（不在任何层中，仅用于展示） ========== */
+body {
+  font-family: sans-serif;
+  display: flex;
+  gap: 20px;
+  padding: 40px;
+  background: #f5f5f5;
+}
+.box {
+  width: 200px;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="box">我是绿色 —— components 层优先级最高</div>
+
+</body>
+</html>

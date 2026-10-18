@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:nth-child(of S) 表格隔行变色</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 传统写法：所有行都变色 ========== */
+.traditional tr:nth-child(even) {
+  background: #ffcdd2;
+}
+
+/* ========== 新语法：只对数据行隔行变色 ========== */
+.new-syntax tr:nth-child(even of .data-row) {
+  background: #c8e6c9;
+}
+
+/* ========== 演示 ========== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background: #1a73e8;
+  color: white;
+  font-weight: bold;
+}
+
+.header {
+  background: #1a73e8;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:nth-child(of S) 表格隔行变色</strong> — 只对数据行隔行变色，跳过表头
+</div>
+
+<div class="container">
+  <h2>传统 :nth-child() — 所有行都变色（包括表头）</h2>
+  <p class="code">tr:nth-child(even) { background: #ffcdd2; }</p>
+  <table class="traditional">
+    <tr><th>姓名</th><th>年龄</th><th>城市</th></tr>
+    <tr><td>张三</td><td>25</td><td>北京</td></tr>
+    <tr><td>李四</td><td>30</td><td>上海</td></tr>
+    <tr><td>王五</td><td>28</td><td>广州</td></tr>
+    <tr><td>赵六</td><td>35</td><td>深圳</td></tr>
+  </table>
+</div>
+
+<div class="container">
+  <h2>新语法 :nth-child(of S) — 只对数据行隔行变色</h2>
+  <p class="code">tr:nth-child(even of .data-row) { background: #c8e6c9; }</p>
+  <table class="new-syntax">
+    <tr class="header"><th>姓名</th><th>年龄</th><th>城市</th></tr>
+    <tr class="data-row"><td>张三</td><td>25</td><td>北京</td></tr>
+    <tr class="data-row"><td>李四</td><td>30</td><td>上海</td></tr>
+    <tr class="data-row"><td>王五</td><td>28</td><td>广州</td></tr>
+    <tr class="data-row"><td>赵六</td><td>35</td><td>深圳</td></tr>
+  </table>
+</div>
+
+</body>
+</html>

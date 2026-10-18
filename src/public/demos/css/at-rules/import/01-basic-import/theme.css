@@ -1,0 +1,12 @@
+/* 主题样式 */
+h1 { font-size: 28px; color: #333; margin-bottom: 12px; }
+p  { color: #666; line-height: 1.6; }
+
+.card {
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  border-left: 3px solid #1677ff;
+}
+.card h2 { font-size: 20px; color: #1677ff; margin-bottom: 8px; }

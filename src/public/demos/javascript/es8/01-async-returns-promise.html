@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>async 的四种返回形态</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 10px; font-size: 15px; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; }
+button:hover { background: #1a73e8; color: #fff; }
+table { border-collapse: collapse; width: 100%; margin-top: 12px; font-size: 13px; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #eee; vertical-align: top; }
+th { background: #f8f9fa; }
+.mono { font-family: monospace; }
+.ok { color: #28a745; font-weight: bold; }
+.err { color: #dc3545; font-weight: bold; }
+.note { background: #e8f0fe; color: #1a73e8; padding: 10px 14px; border-radius: 6px;
+        font-size: 13px; margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<h3>四种写法，四种 Promise 结果</h3>
+<button onclick="run()">运行</button>
+
+<div id="result"></div>
+
+<div class="note">
+  关键点：<strong>只要标了 <code>async</code>，返回值一定是 Promise</strong> ——
+  哪怕是 <code>return 1</code>，哪怕是 <code>throw</code>，哪怕函数体是空的。
+</div>
+
+<script>
+async function a() { return 1 }                    // fulfilled：1
+async function b() { return Promise.resolve(2) }   // fulfilled：2（自动展开）
+async function c() { throw new Error('boom') }      // rejected：Error
+async function d() { }                              // fulfilled：undefined
+
+const cases = [
+  { label: 'async function a() { return 1 }', fn: a, code: 'return 1' },
+  { label: 'async function b() { return Promise.resolve(2) }', fn: b, code: 'return Promise' },
+  { label: "async function c() { throw new Error('boom') }", fn: c, code: 'throw' },
+  { label: 'async function d() { }', fn: d, code: '没有 return' },
+]
+
+async function inspect(name, fn) {
+  const p = fn()
+  const isPromise = p instanceof Promise
+  try {
+    const value = await p
+    return { name, isPromise, state: 'fulfilled', value: JSON.stringify(value) }
+  } catch (e) {
+    return { name, isPromise, state: 'rejected', value: `${e.name}: ${e.message}` }
+  }
+}
+
+async function run() {
+  const rows = []
+  for (const { label, fn, code } of cases) {
+    const r = await inspect(label, fn)
+    rows.push(`<tr>
+      <td class="mono">${code}</td>
+      <td class="mono" style="font-size:12px">${label}</td>
+      <td>${r.isPromise ? '✅ Promise' : '❌ 不是'}</td>
+      <td class="${r.state === 'fulfilled' ? 'ok' : 'err'}">${r.state}</td>
+      <td class="mono">${r.value}</td>
+    </tr>`)
+  }
+
+  document.getElementById('result').innerHTML = `
+    <table>
+      <thead><tr><th>函数体写法</th><th>声明</th><th>返回值是 Promise</th><th>状态</th><th>结果</th></tr></thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+    <div class="note">
+      看第 2 行：<code>return Promise.resolve(2)</code> 得到的是 <code>2</code> 而不是嵌套的 Promise ——
+      这叫 <strong>Promise 展开</strong>，所以不需要写 <code>return await</code>。
+    </div>`
+}
+
+run()
+</script>
+
+</body>
+</html>

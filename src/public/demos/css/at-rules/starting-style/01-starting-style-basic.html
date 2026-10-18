@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@starting-style — 入场动画</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+/* 最终状态 */
+.box {
+  width: 120px; height: 120px;
+  background: #1677ff;
+  border-radius: 12px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+/* 起始状态：元素首次渲染时从这里过渡到最终状态 */
+@starting-style {
+  .box {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+</style>
+</head>
+<body>
+
+<p>刷新页面，蓝色方块从下方淡入 👇</p>
+<div class="box"></div>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>color-mix() 渐变混合</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 渐变示例 ========== */
+.gradient-box {
+  height: 120px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.gradient-linear {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, #1a73e8 100%, white),
+    color-mix(in srgb, #1a73e8 60%, white)
+  );
+}
+
+.gradient-radial {
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, #28a745 100%, white),
+    color-mix(in srgb, #28a745 60%, white)
+  );
+}
+
+.gradient-mixed {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #1a73e8 80%, #28a745 20%),
+    color-mix(in srgb, #28a745 80%, #1a73e8 20%)
+  );
+}
+
+/* ========== 渐变卡片 ========== */
+.gradient-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.gradient-card {
+  height: 150px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.gradient-card-1 {
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, #1a73e8 100%, white), 
+    color-mix(in srgb, #1a73e8 60%, white)
+  );
+}
+
+.gradient-card-2 {
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, #28a745 100%, white), 
+    color-mix(in srgb, #28a745 60%, white)
+  );
+}
+
+.gradient-card-3 {
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, #dc3545 100%, white), 
+    color-mix(in srgb, #dc3545 60%, white)
+  );
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>color-mix() 渐变混合</strong> — 在渐变中使用 color-mix()
+</div>
+
+<div class="container">
+  <h2>1. 线性渐变</h2>
+  <p class="code">background: linear-gradient(90deg, color-mix(in srgb, #1a73e8 100%, white), color-mix(in srgb, #1a73e8 60%, white));</p>
+  <div class="gradient-box gradient-linear"></div>
+</div>
+
+<div class="container">
+  <h2>2. 径向渐变</h2>
+  <p class="code">background: radial-gradient(circle, color-mix(in srgb, #28a745 100%, white), color-mix(in srgb, #28a745 60%, white));</p>
+  <div class="gradient-box gradient-radial"></div>
+</div>
+
+<div class="container">
+  <h2>3. 混合颜色渐变</h2>
+  <p class="code">background: linear-gradient(135deg, color-mix(in srgb, #1a73e8 80%, #28a745 20%), color-mix(in srgb, #28a745 80%, #1a73e8 20%));</p>
+  <div class="gradient-box gradient-mixed"></div>
+</div>
+
+<div class="container">
+  <h2>4. 渐变卡片</h2>
+  <div class="gradient-cards">
+    <div class="gradient-card gradient-card-1">蓝色渐变</div>
+    <div class="gradient-card gradient-card-2">绿色渐变</div>
+    <div class="gradient-card gradient-card-3">红色渐变</div>
+  </div>
+</div>
+
+</body>
+</html>

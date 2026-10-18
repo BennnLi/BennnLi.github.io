@@ -1,0 +1,8 @@
+/* 默认样式（所有尺寸） */
+@import url('./base.css');
+
+/* 宽屏：> 768px 时导入 */
+@import url('./wide.css') (min-width: 768px);
+
+/* 窄屏：≤ 768px 时导入 */
+@import url('./narrow.css') (max-width: 768px);

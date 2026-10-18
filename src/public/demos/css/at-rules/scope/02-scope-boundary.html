@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@scope — 下边界 to() 示例</title>
+<style>
+/* 作用域从 .post 开始，到 .comments 为止 */
+@scope (.post) to (.comments) {
+  p {
+    color: #333;
+    background: #e6f7ff;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 3px solid #1677ff;
+  }
+}
+
+body {
+  font-family: sans-serif;
+  max-width: 600px;
+  margin: 40px auto;
+  background: #f5f5f5;
+}
+.post, .comments {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.comments { background: #fffbf0; }
+</style>
+</head>
+<body>
+
+<article class="post">
+  <h3>📝 文章正文</h3>
+  <p>段落一：在作用域内 ✅</p>
+  <div class="related">
+    <p>段落二（嵌套在 related 中）：仍在作用域内 ✅</p>
+  </div>
+
+  <section class="comments">
+    <h4>💬 评论区（下边界）</h4>
+    <p>评论内容：不在作用域内 ❌</p>
+  </section>
+
+  <p>段落三：在 .comments 之后，但在 .post 内，仍在作用域内 ✅</p>
+</article>
+
+</body>
+</html>

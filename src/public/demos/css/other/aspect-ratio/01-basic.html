@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>aspect-ratio 基础用法</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== aspect-ratio 示例 ========== */
+.ratio-box {
+  width: 200px;
+  background: #e8f0fe;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #1a73e8;
+  margin: 16px 0;
+}
+
+.ratio-1-1 { aspect-ratio: 1 / 1; }
+.ratio-16-9 { aspect-ratio: 16 / 9; }
+.ratio-4-3 { aspect-ratio: 4 / 3; }
+.ratio-3-2 { aspect-ratio: 3 / 2; }
+
+/* ========== 视频容器 ========== */
+.video-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+/* ========== 头像 ========== */
+.avatar {
+  width: 48px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #1a73e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  margin: 16px 0;
+}
+
+/* ========== 卡片图片 ========== */
+.card {
+  width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 16px 0;
+}
+
+.card-image {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  background: linear-gradient(135deg, #1a73e8, #8ab4f8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.card-content h3 {
+  margin-top: 0;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>aspect-ratio 基础</strong> — 指定元素的宽高比
+</div>
+
+<div class="container">
+  <h2>1. 常用宽高比</h2>
+  <p class="code">aspect-ratio: 1 / 1; aspect-ratio: 16 / 9; aspect-ratio: 4 / 3; aspect-ratio: 3 / 2;</p>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <div class="ratio-box ratio-1-1">1:1</div>
+    <div class="ratio-box ratio-16-9">16:9</div>
+    <div class="ratio-box ratio-4-3">4:3</div>
+    <div class="ratio-box ratio-3-2">3:2</div>
+  </div>
+</div>
+
+<div class="container">
+  <h2>2. 视频容器</h2>
+  <p class="code">aspect-ratio: 16 / 9;</p>
+  <div class="video-container">
+    视频容器（16:9）
+  </div>
+</div>
+
+<div class="container">
+  <h2>3. 头像</h2>
+  <p class="code">aspect-ratio: 1; border-radius: 50%;</p>
+  <div style="display: flex; gap: 16px;">
+    <div class="avatar">A</div>
+    <div class="avatar" style="background: #28a745;">B</div>
+    <div class="avatar" style="background: #dc3545;">C</div>
+  </div>
+</div>
+
+<div class="container">
+  <h2>4. 卡片图片</h2>
+  <p class="code">aspect-ratio: 3 / 2;</p>
+  <div class="card">
+    <div class="card-image">图片区域（3:2）</div>
+    <div class="card-content">
+      <h3>卡片标题</h3>
+      <p>卡片内容描述</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

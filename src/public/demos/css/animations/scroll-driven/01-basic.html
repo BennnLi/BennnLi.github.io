@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Scroll-driven Animations 基础用法</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+  min-height: 200vh;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 滚动驱动动画 ========== */
+.animated-box {
+  width: 100px;
+  height: 100px;
+  background: #1a73e8;
+  border-radius: 8px;
+  margin: 50px auto;
+
+  animation: move linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 100%;
+}
+
+@keyframes move {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ========== 进度条 ========== */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: #1a73e8;
+  z-index: 1000;
+  animation: progress linear;
+  animation-timeline: scroll();
+}
+
+@keyframes progress {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="progress"></div>
+
+<div class="description">
+  <strong>Scroll-driven Animations 基础</strong> — 动画进度由滚动位置驱动
+</div>
+
+<div class="container">
+  <h2>1. 进度条</h2>
+  <p class="code">animation-timeline: scroll();</p>
+  <p>页面顶部的进度条会跟随滚动进度变化。</p>
+</div>
+
+<div style="height: 100vh;"></div>
+
+</body>
+</html>

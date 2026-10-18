@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:where() 默认主题 — 可覆盖的 CSS 变量</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+/* ========== 默认主题 — :where() 特异性为 0 ========== */
+:where(:root) {
+  --primary: #1a73e8;
+  --text: #333;
+  --bg: #fff;
+  --border: #ddd;
+  --radius: 8px;
+}
+
+/* ========== 用户自定义 — 无需 !important ========== */
+:root {
+  --primary: #e91e63;
+  --text: #1a1a1a;
+}
+
+/* ========== 组件样式 ========== */
+.card {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 16px 0;
+}
+
+.card h2 {
+  color: var(--primary);
+  margin-top: 0;
+}
+
+.card p {
+  margin-bottom: 16px;
+}
+
+.button {
+  padding: 10px 20px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+.theme-switcher {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.theme-btn {
+  padding: 8px 16px;
+  border: 2px solid var(--primary);
+  background: white;
+  color: var(--primary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.theme-btn.active {
+  background: var(--primary);
+  color: white;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:where() 默认主题</strong> — 特异性为 0，用户可轻松覆盖
+</div>
+
+<div class="theme-switcher">
+  <button class="theme-btn active" onclick="setTheme('pink')">粉色主题</button>
+  <button class="theme-btn" onclick="setTheme('blue')">蓝色主题</button>
+  <button class="theme-btn" onclick="setTheme('green')">绿色主题</button>
+</div>
+
+<div class="card">
+  <h2>主题演示</h2>
+  <p>这个卡片使用了 CSS 变量定义的主题色。</p>
+  <p><strong>说明：</strong>默认主题用 <code>:where(:root)</code> 定义（特异性为 0），用户自定义用普通 <code>:root</code> 定义，无需 !important 即可覆盖。</p>
+  <button class="button">主要按钮</button>
+</div>
+
+<script>
+function setTheme(theme) {
+  const themes = {
+    pink: { primary: '#e91e63' },
+    blue: { primary: '#1a73e8' },
+    green: { primary: '#28a745' }
+  };
+
+  const root = document.documentElement;
+  root.style.setProperty('--primary', themes[theme].primary);
+
+  // 更新按钮状态
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.textContent.includes(theme === 'pink' ? '粉色' : theme === 'blue' ? '蓝色' : '绿色')) {
+      btn.classList.add('active');
+    }
+  });
+}
+</script>
+
+</body>
+</html>

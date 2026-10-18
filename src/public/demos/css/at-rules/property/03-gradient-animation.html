@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>@property — 渐变角度动画</title>
+  <style>
+    /* ========== 注册角度类型，驱动渐变旋转 ========== */
+    @property --angle {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
+    }
+
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      background: #1a1a2e;
+      color: #ccc;
+    }
+
+    .wheel {
+      --angle: 0deg;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: conic-gradient(from var(--angle),
+          #ff0080, #7928ca, #00d2ff, #ff0080);
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        --angle: 360deg;
+      }
+    }
+
+    @property --linear-gradient-color-1 {
+      syntax: '<color>';
+      inherits: false;
+      initial-value: #ff0080
+    }
+    @property --linear-gradient-color-2 {
+      syntax: '<color>';
+      inherits: false;
+      initial-value: #00d2ff
+    }
+    @property --linear-gradient-angle {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 45deg;
+    }
+    .block {
+      --linear-gradient-color-1: #ff0080;
+      --linear-gradient-color-2: #00d2ff;
+      --linear-gradient-angle: 45deg;
+      margin: 0 auto;
+      width: 300px;
+      height: 200px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      background: linear-gradient(var(--linear-gradient-angle), var(--linear-gradient-color-1), var(--linear-gradient-color-2));
+      transition:
+        --linear-gradient-color-1 1s ease-in-out,
+        --linear-gradient-color-2 1s ease-in-out,
+        --linear-gradient-angle 1s ease;
+    }
+    .block:hover {
+      --linear-gradient-color-1: #00d2ff;
+      --linear-gradient-color-2: #ff0080;
+      --linear-gradient-angle: -45deg
+    }
+
+    .block-2 {
+      margin: 0 auto;
+      width: 300px;
+      height: 200px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      background: linear-gradient(45deg, #ff0080, #00d2ff);
+      transition: background 1s ease-in-out;
+    }
+    .block-2:hover {
+      background: linear-gradient(-45deg, #00d2ff, #ff0080);
+    }
+  </style>
+</head>
+
+<body>
+  <p><code>@property</code> 让 <code>&lt;angle&gt;</code> 可动画 —— 锥形渐变持续旋转</p>
+  <div class="wheel"></div>
+
+  <p><code>@property</code> 让 <code>&lt;angle&gt;</code> 可动画 —— 渐变背景动画</p>
+  <div class="block"> hover </div>
+
+  <p> 无动画</p>
+  <div class="block-2"> hover</div>
+</body>
+
+</html>

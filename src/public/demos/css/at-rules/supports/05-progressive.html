@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@supports 渐进增强</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+/* ===== 第 1 层：所有浏览器都能用的基础样式 ===== */
+.badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 16px;
+  background: #3498db;       /* 基础色 */
+  color: white;
+  font-size: 13px;
+  margin: 4px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+/* ===== 第 2 层：支持 color-mix 时增强 ===== */
+@supports (color: color-mix(in srgb, red, blue)) {
+  .badge {
+    background: color-mix(in srgb, #3498db 80%, black);
+  }
+  .btn:hover {
+    background: color-mix(in srgb, #3498db 70%, black);
+  }
+}
+
+/* ===== 第 3 层：支持 oklch 时再增强 ===== */
+@supports (color: oklch(0.5 0.2 250)) {
+  .badge {
+    background: oklch(0.55 0.18 250);
+  }
+}
+
+.status {
+  font-size: 12px;
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-top: 16px;
+  line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<p>这个徽标和按钮的颜色，会按浏览器能力逐层增强：</p>
+
+<div>
+  <span class="badge">标签一</span>
+  <span class="badge">标签二</span>
+  <span class="badge">标签三</span>
+</div>
+
+<p style="margin-top:16px;">
+  <button class="btn">悬停看颜色变化</button>
+</p>
+
+<div class="status" id="status"></div>
+
+<script>
+// 显示当前浏览器各特性的检测结果
+const checks = [
+  ['display: grid',            '(display: grid)'],
+  ['color-mix()',              '(color: color-mix(in srgb, red, blue))'],
+  ['oklch()',                  '(color: oklch(0.5 0.2 250))'],
+  ['aspect-ratio',             '(aspect-ratio: 1)'],
+  ['container-type',           '(container-type: inline-size)'],
+  ['selector(:has())',         'selector(:has(a))'],
+];
+
+document.getElementById('status').innerHTML =
+  '当前浏览器的能力检测：<br>' +
+  checks.map(([name, cond]) =>
+    `&nbsp;&nbsp;${CSS.supports(cond) ? '✅' : '❌'} ${name}`
+  ).join('<br>');
+</script>
+
+</body>
+</html>

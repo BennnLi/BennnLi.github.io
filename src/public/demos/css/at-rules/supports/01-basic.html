@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@supports 基础</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+.box {
+  padding: 16px;
+  border-radius: 8px;
+  background: #ffe0e0;      /* 默认：不支持 grid 时的样子 */
+}
+
+/* 支持 display: grid 时才应用 */
+@supports (display: grid) {
+  .box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: #e0ffe0;
+  }
+}
+
+.item { padding: 12px; background: white; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<p>浏览器支持 <code>display: grid</code>，所以下面这个盒子变成两列网格（绿底）：</p>
+
+<div class="box">
+  <div class="item">1</div>
+  <div class="item">2</div>
+  <div class="item">3</div>
+  <div class="item">4</div>
+</div>
+
+<p>把 <code>@supports</code> 里的条件改成 <code>(display: foo)</code> 再刷新，就会看到红底的单列样式。</p>
+
+</body>
+</html>

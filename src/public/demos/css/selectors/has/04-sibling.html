@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:has() 兄弟组合器</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+h3 { margin-top: 0; }
+
+/* ========== 1. :has(+ x) 紧邻下一个兄弟 ========== */
+/* 后面还有 li 的项加分隔线（最后一项不加） */
+.sibling-list li:has(+ li) {
+  border-bottom: 1px solid #eee;
+}
+
+/* ========== 2. 后面紧跟段落时，减少标题下边距 ========== */
+.tight h3:has(+ p) {
+  margin-bottom: 4px;
+}
+
+/* 后面不是段落的标题，加大下边距 */
+.tight h3:not(:has(+ p)) {
+  margin-bottom: 24px;
+}
+
+/* ========== 3. :has(~ x) 后续某个兄弟 ========== */
+/* 后面还有 .highlight 时，加左侧标记 */
+.after-demo .item:has(~ .highlight) {
+  border-left: 3px solid #ffc107;
+}
+
+/* ========== 4. 用兄弟关系做步骤连接线 ========== */
+.steps {
+  display: flex;
+  gap: 0;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ddd;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* 完成态 */
+.step.done .step-dot {
+  background: #28a745;
+  color: white;
+}
+
+/* 后面还有步骤时，画一条连接线 */
+.step:has(+ .step)::after {
+  content: '';
+  width: 60px;
+  height: 2px;
+  background: #ddd;
+  display: block;
+}
+
+/* ========== 5. label 与 input 的兄弟关系 ========== */
+.field {
+  margin-bottom: 14px;
+}
+
+.field label:has(+ input:required)::after {
+  content: ' *';
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+  margin-top: 6px;
+}
+
+/* ========== 演示用样式 ========== */
+ul.sibling-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+ul.sibling-list li {
+  padding: 12px 16px;
+}
+
+ul.sibling-list li:last-child {
+  background: #e8f5e9;
+}
+
+.tight {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.after-demo .item {
+  padding: 12px 16px;
+  margin: 6px 0;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.after-demo .item.highlight {
+  background: #fff3cd;
+  font-weight: bold;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #fff3cd;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #856404;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:has() 兄弟组合器</strong> — <code>:has(+ x)</code> 看紧邻的下一个兄弟，<code>:has(~ x)</code> 看后面任意兄弟
+</div>
+
+<div class="container">
+  <h2>1. <code>:has(+ li)</code> — 最后一项不加分隔线</h2>
+  <p class="code">.sibling-list li:has(+ li) { border-bottom: 1px solid #eee; }</p>
+  <ul class="sibling-list">
+    <li>第一项（后面还有项 → 有分隔线）</li>
+    <li>第二项（后面还有项 → 有分隔线）</li>
+    <li>第三项（后面还有项 → 有分隔线）</li>
+    <li>第四项（最后一项 → 无分隔线，绿色背景标记）</li>
+  </ul>
+</div>
+
+<div class="container">
+  <h2>2. <code>h3:has(+ p)</code> — 后面是段落时收紧间距</h2>
+  <p class="code">h3:has(+ p) { margin-bottom: 4px; }　h3:not(:has(+ p)) { margin-bottom: 24px; }</p>
+  <div class="tight">
+    <h3>后面紧跟段落的标题</h3>
+    <p>标题和本段落间距很紧凑，因为它们是"标题 + 说明"的组合。</p>
+    <h3>后面不是段落的标题</h3>
+    <div style="padding:12px;background:#f0f0f0;border-radius:6px;">一个 div 块</div>
+  </div>
+</div>
+
+<div class="container">
+  <h2>3. <code>:has(~ .highlight)</code> — 后面有高亮项时加标记</h2>
+  <p class="code">.item:has(~ .highlight) { border-left: 3px solid #ffc107; }</p>
+  <div class="after-demo">
+    <div class="item">项目一（后面有高亮项 → 黄色左标记）</div>
+    <div class="item">项目二（后面有高亮项 → 黄色左标记）</div>
+    <div class="item highlight">项目三（高亮项本身）</div>
+    <div class="item">项目四（后面没有高亮项 → 无标记）</div>
+  </div>
+</div>
+
+<div class="container">
+  <h2>4. 步骤条连接线</h2>
+  <p class="code">.step:has(+ .step)::after { content: ''; width: 60px; height: 2px; }</p>
+  <div class="steps">
+    <div class="step done"><div class="step-dot">1</div></div>
+    <div class="step done"><div class="step-dot">2</div></div>
+    <div class="step"><div class="step-dot">3</div></div>
+    <div class="step"><div class="step-dot">4</div></div>
+  </div>
+  <p>连接线由 <code>:has(+ .step)</code> 生成——最后一个步骤后面没有兄弟，所以不画线。</p>
+</div>
+
+<div class="container">
+  <h2>5. label 与 input 的兄弟关系</h2>
+  <p class="code">label:has(+ input:required)::after { content: ' *'; color: #dc3545; }</p>
+  <div class="field">
+    <label>用户名（必填）</label>
+    <input type="text" required placeholder="这个字段是必填的">
+  </div>
+  <div class="field">
+    <label>昵称（选填）</label>
+    <input type="text" placeholder="这个字段是选填的">
+  </div>
+  <div class="note">
+    <strong>技巧：</strong>只需给 input 加 <code>required</code> 属性，label 上的红色星号就会自动出现——无需在 HTML 里手写星号，也无需 JS 同步。
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>CSS.supports() 等价 API</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+table { border-collapse: collapse; width: 100%; max-width: 700px; }
+th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #eee; }
+th { background: #f8f9fa; }
+td:first-child { font-family: monospace; font-size: 13px; }
+.ok  { color: #28a745; font-weight: bold; }
+.no  { color: #dc3545; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<p>用 <code>CSS.supports()</code> 在 JS 中做同样的判断：</p>
+
+<table>
+  <thead>
+    <tr><th>检测表达式</th><th>结果</th></tr>
+  </thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<script>
+const cases = [
+  "display: grid",
+  "display: flex",
+  "(display: grid) and (gap: 1rem)",
+  "(display: grid) or (display: foo)",
+  "not (display: foo)",
+  "aspect-ratio: 1",
+  "color: oklch(0.5 0.2 250)",
+  "selector(:has(a))",
+  "selector(:nth-child(2 of .x))",
+];
+
+document.getElementById('rows').innerHTML = cases.map(c => {
+  const ok = CSS.supports(c);
+  return `<tr>
+    <td>CSS.supports('${c}')</td>
+    <td class="${ok ? 'ok' : 'no'}">${ok}</td>
+  </tr>`;
+}).join('');
+
+// 也可以传两个参数：属性名 + 值
+console.log('CSS.supports("display", "grid") =', CSS.supports('display', 'grid'));
+</script>
+
+</body>
+</html>

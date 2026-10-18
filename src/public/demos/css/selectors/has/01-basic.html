@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:has() 基础用法 — 父选择器</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 1. 含图片的卡片 ========== */
+.card {
+  padding: 20px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+/* 含图片的卡片加蓝色边框和圆角 */
+.card:has(img) {
+  border-color: #1a73e8;
+  border-width: 2px;
+}
+
+.card:has(img)::before {
+  content: '含图片';
+  display: inline-block;
+  background: #1a73e8;
+  color: white;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+/* ========== 2. 只匹配直接子元素 ========== */
+.box {
+  padding: 16px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+/* 直接子元素是 img 时才匹配 */
+.box:has(> img) {
+  background: #e8f5e9;
+  border-color: #28a745;
+}
+
+/* ========== 3. 根据子元素选择父元素 ========== */
+.list {
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 12px 0;
+  border: 1px solid #ddd;
+}
+
+/* 列表中含 .active 时，整个列表高亮 */
+.list:has(.active) {
+  background: #fff3cd;
+  border-color: #ffc107;
+}
+
+.list:has(.active)::before {
+  content: '✓ 含有激活项';
+  display: block;
+  color: #856404;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* ========== 演示用样式 ========== */
+.mock-img {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #1a73e8, #8ab4f8);
+  border-radius: 6px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+
+li {
+  padding: 8px 12px;
+  margin: 4px 0;
+  background: white;
+  border-radius: 4px;
+}
+
+li.active {
+  background: #1a73e8;
+  color: white;
+  font-weight: bold;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #fff3cd;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #856404;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:has() 基础用法</strong> — 反向匹配：根据子元素来决定父元素的样式
+</div>
+
+<div class="container">
+  <h2>1. 根据是否含图片选择卡片</h2>
+  <p class="code">.card:has(img) { border-color: #1a73e8; }</p>
+
+  <div class="card">
+    <div class="mock-img"></div>
+    <p>这张卡片<strong>含图片</strong>，所以有蓝色边框和「含图片」标签。</p>
+  </div>
+
+  <div class="card">
+    <p>这张卡片<strong>没有图片</strong>，保持默认样式。</p>
+  </div>
+</div>
+
+<div class="container">
+  <h2>2. 只匹配直接子元素 <code>&gt;</code></h2>
+  <p class="code">.box:has(&gt; img) { background: #e8f5e9; }</p>
+
+  <div class="box">
+    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+         alt="" style="width:40px;height:40px;background:#28a745;border-radius:4px;">
+    <p>图片是<strong>直接子元素</strong> → 绿色背景（匹配）</p>
+  </div>
+
+  <div class="box">
+    <div style="padding:8px;background:#fff;border-radius:4px;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+           alt="" style="width:40px;height:40px;background:#999;border-radius:4px;">
+    </div>
+    <p>图片被包在 div 里，<strong>不是直接子元素</strong> → 默认样式（不匹配）</p>
+  </div>
+</div>
+
+<div class="container">
+  <h2>3. 根据子元素状态选择父元素</h2>
+  <p class="code">.list:has(.active) { background: #fff3cd; }</p>
+
+  <div class="list">
+    <ul>
+      <li>项目一</li>
+      <li class="active">项目二（active）</li>
+      <li>项目三</li>
+    </ul>
+  </div>
+  <p>↑ 列表中含 <code>.active</code> → 整个列表高亮</p>
+
+  <div class="list">
+    <ul>
+      <li>项目一</li>
+      <li>项目二</li>
+      <li>项目三</li>
+    </ul>
+  </div>
+  <p>↑ 列表中没有 <code>.active</code> → 保持默认样式</p>
+
+  <div class="note">
+    <strong>核心思想：</strong>以前只能"从父选子"，<code>:has()</code> 让 CSS 可以"从子选父"——这正是它被称为「父选择器」的原因。
+  </div>
+</div>
+
+</body>
+</html>

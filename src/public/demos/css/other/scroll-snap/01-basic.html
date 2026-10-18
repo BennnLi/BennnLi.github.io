@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Scroll Snap 基础用法</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 水平轮播 ========== */
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+  padding: 16px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  height: 200px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.carousel-item:nth-child(1) { background: #1a73e8; }
+.carousel-item:nth-child(2) { background: #28a745; }
+.carousel-item:nth-child(3) { background: #dc3545; }
+.carousel-item:nth-child(4) { background: #ffc107; color: #333; }
+
+/* ========== 垂直分页 ========== */
+.pages {
+  height: 300px;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+}
+
+.page {
+  height: 300px;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.page:nth-child(1) { background: #1a73e8; }
+.page:nth-child(2) { background: #28a745; }
+.page:nth-child(3) { background: #dc3545; }
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>Scroll Snap 基础</strong> — 滚动时自动对齐到指定位置
+</div>
+
+<div class="container">
+  <h2>1. 水平轮播</h2>
+  <p class="code">scroll-snap-type: x mandatory; scroll-snap-align: start;</p>
+  <div class="carousel">
+    <div class="carousel-item">1</div>
+    <div class="carousel-item">2</div>
+    <div class="carousel-item">3</div>
+    <div class="carousel-item">4</div>
+  </div>
+</div>
+
+<div class="container">
+  <h2>2. 垂直分页</h2>
+  <p class="code">scroll-snap-type: y mandatory; scroll-snap-align: start;</p>
+  <div class="pages">
+    <div class="page">第 1 页</div>
+    <div class="page">第 2 页</div>
+    <div class="page">第 3 页</div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:has() 表单验证联动</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 表单项容器 ========== */
+.field {
+  padding: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+.field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+/* ========== 核心：:has() 联动整个字段组 ========== */
+
+/* 输入无效时：整个字段组变红（包括 label） */
+.field:has(input:invalid) {
+  border-color: #dc3545;
+  background: #fff5f5;
+}
+
+.field:has(input:invalid) label {
+  color: #dc3545;
+}
+
+.field:has(input:invalid) label::after {
+  content: ' ✗';
+  font-weight: normal;
+}
+
+/* 输入有效时：整个字段组变绿 */
+.field:has(input:user-valid) {
+  border-color: #28a745;
+  background: #f8fff8;
+}
+
+.field:has(input:user-valid) label {
+  color: #28a745;
+}
+
+.field:has(input:user-valid) label::after {
+  content: ' ✓';
+  font-weight: normal;
+}
+
+/* ========== 表单整体状态 ========== */
+form {
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  transition: all 0.2s;
+}
+
+/* 表单中有无效项时，提交按钮置灰 */
+form:has(input:invalid) button[type="submit"] {
+  background: #ccc;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+form:has(input:invalid)::after {
+  content: '⚠ 表单中有未填写或格式错误的字段';
+  display: block;
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: #fff3cd;
+  color: #856404;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #28a745;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #d4edda;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #155724;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:has() 表单验证联动</strong> — 输入框出错时，高亮整个字段组（含 label）
+</div>
+
+<div class="container">
+  <h2>表单验证演示</h2>
+  <p class="code">.field:has(input:invalid) { border-color: #dc3545; background: #fff5f5; }</p>
+  <p>在下面的输入框中试试：留空、输入错误格式、输入正确格式，观察<strong>整个字段组</strong>（边框 + 背景 + label 颜色）的联动变化。</p>
+
+  <form>
+    <div class="field">
+      <label>用户名（必填）</label>
+      <input type="text" required placeholder="请输入用户名">
+    </div>
+
+    <div class="field">
+      <label>邮箱（必填）</label>
+      <input type="email" required placeholder="user@example.com">
+    </div>
+
+    <div class="field">
+      <label>年龄（18-60）</label>
+      <input type="number" min="18" max="60" required placeholder="请输入年龄">
+    </div>
+
+    <button type="submit">提交</button>
+  </form>
+
+  <div class="note">
+    <strong>对比传统做法：</strong>以前要在 JS 里监听输入、判断有效性，再给父元素加/删类名。<code>:has()</code> 让"子元素状态 → 父元素样式"的联动完全交给 CSS，无需一行 JS。
+  </div>
+</div>
+
+</body>
+</html>

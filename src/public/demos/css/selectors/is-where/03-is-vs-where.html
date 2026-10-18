@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:is() vs :where() 特异性对比</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== :is() 特异性 = (0,1,0) ========== */
+:is(.container) p {
+  color: red;
+  font-weight: bold;
+}
+
+/* ========== :where() 特异性 = (0,0,0) ========== */
+:where(.container) p {
+  color: blue;
+}
+
+/* ========== 普通选择器 (0,0,1) ========== */
+p {
+  color: green;
+}
+
+/* ========== 演示 ========== */
+.box {
+  padding: 16px;
+  margin: 12px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+}
+
+.is-demo { border-color: #1a73e8; }
+.where-demo { border-color: #28a745; }
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:is() vs :where() 特异性对比</strong> — 理解特异性差异
+</div>
+
+<div class="container">
+  <h2>特异性对比演示</h2>
+
+  <div class="box is-demo">
+    <p>:is(.container) p — 特异性 (0,1,0) — <strong>红色</strong>（胜出）</p>
+    <p class="code">:is(.container) p { color: red; }</p>
+  </div>
+
+  <div class="box where-demo">
+    <p>:where(.container) p — 特异性 (0,0,0) — <strong>绿色</strong>（被 p { color: green; } 覆盖）</p>
+    <p class="code">:where(.container) p { color: blue; }</p>
+    <p class="code">p { color: green; } ← 这条规则胜出</p>
+  </div>
+
+  <div class="box">
+    <h3>特异性规则</h3>
+    <ul>
+      <li><code>:is()</code> 的特异性 = 参数中<strong>最高</strong>的特异性</li>
+      <li><code>:where()</code> 的特异性 = <strong>0</strong>（始终为 0）</li>
+      <li>普通选择器 <code>p</code> 的特异性 = (0,0,1)</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

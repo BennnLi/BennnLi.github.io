@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "types": ["node", "vite/client"],
+
+    /* Node 原生跑 TS（类型擦除）要求：不允许 enum / namespace 等非擦除语法，
+       并要求类型导入显式写 import type */
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /* 脚本内部用 './types.ts' 显式扩展名导入 */
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+
+    /* 严格模式 */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["scripts/**/*.ts", ".vitepress/**/*.ts", ".vitepress/**/*.mts", "env.d.ts"],
+  "exclude": ["node_modules", "src", ".vitepress/dist", ".vitepress/cache"]
+}

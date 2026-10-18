@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>async/await 四个陷阱</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 8px; font-size: 15px; }
+section { margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+section:last-child { border-bottom: 0; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+pre { background: #262b33; color: #e0e0e0; padding: 10px 12px; border-radius: 6px;
+      font-size: 12px; margin: 6px 0; overflow-x: auto; }
+.out { font-family: monospace; font-size: 12.5px; background: #f8f9fa;
+       border-left: 3px solid #1a73e8; padding: 8px 12px; border-radius: 0 6px 6px 0;
+       margin-top: 8px; white-space: pre-wrap; }
+.bad { border-left-color: #dc3545; }
+.good { border-left-color: #28a745; }
+</style>
+</head>
+<body>
+
+<section>
+  <h3>陷阱 ① forEach 里的 await 不会被等待</h3>
+  <button onclick="p1()">运行对比</button>
+  <div class="out" id="o1">点按钮运行（约需 2 秒）</div>
+</section>
+
+<section>
+  <h3>陷阱 ② 忘记 await：catch 抓不到</h3>
+  <button onclick="p2()">运行对比</button>
+  <div class="out" id="o2">点按钮运行</div>
+</section>
+
+<section>
+  <h3>陷阱 ③ try 里必须写 return await</h3>
+  <button onclick="p3()">运行对比</button>
+  <div class="out" id="o3">点按钮运行</div>
+</section>
+
+<script>
+const delay = (ms) => new Promise(r => setTimeout(r, ms))
+const fail = () => Promise.reject(new Error('boom'))
+const ids = [1, 2, 3]
+const TASK = 600
+
+// 收集未处理的拒绝，避免刷控制台
+const unhandled = []
+window.addEventListener('unhandledrejection', (e) => {
+  unhandled.push(e.reason.message)
+  e.preventDefault()
+})
+
+// ── ① forEach vs for...of vs Promise.all ──────────
+async function byForEach() {
+  const t0 = performance.now()
+  ids.forEach(async () => { await delay(TASK) })   // ❌ 不等待
+  return performance.now() - t0
+}
+async function byForOf() {
+  const t0 = performance.now()
+  for (const _ of ids) await delay(TASK)            // ✅ 串行等待
+  return performance.now() - t0
+}
+async function byAll() {
+  const t0 = performance.now()
+  await Promise.all(ids.map(() => delay(TASK)))     // ✅ 并发等待
+  return performance.now() - t0
+}
+
+async function p1() {
+  const out = document.getElementById('o1')
+  out.textContent = '运行中…'
+
+  const a = await byForEach()
+  const b = await byForOf()
+  const c = await byAll()
+
+  out.innerHTML =
+`✅ 外层 await 3 个 600ms 任务后返回，各写法实测耗时：
+
+  forEach + async 回调   →  ${Math.round(a)} ms   ❌ 外层根本没等（立即返回）
+  for...of + await       →  ${Math.round(b)} ms   ✅ 真的等完了，串行
+  map + Promise.all      →  ${Math.round(c)} ms   ✅ 并发等待
+
+结论：forEach 是同步方法，它只"调用"回调，不管回调返回的 Promise。`
+}
+
+// ── ② 忘写 await ──────────────────────────────────
+async function withAwait() {
+  try {
+    await fail()
+    return '不会到这里'
+  } catch (e) {
+    return `✅ catch 捕获到：${e.message}`
+  }
+}
+async function withoutAwait() {
+  try {
+    fail()                    // ❌ 少了 await
+    return 'catch 没有执行（拒绝逃逸成 unhandledrejection）'
+  } catch (e) {
+    return `catch 捕获到：${e.message}`
+  }
+}
+
+async function p2() {
+  const before = unhandled.length
+  const r1 = await withAwait()
+  const r2 = await withoutAwait()
+  await delay(50)   // 等全局事件派发
+
+  const escaped = unhandled.length > before ? unhandled[unhandled.length - 1] : '(无)'
+
+  document.getElementById('o2').innerHTML =
+`await fail()      →  ${r1}
+fail()（无 await） →  ${r2}
+                   →  逃逸的拒绝：${escaped}   ← 被全局 unhandledrejection 兜住了
+
+结论：忘记 await，try/catch 就形同虚设，失败会静默逃逸。`
+}
+
+// ── ③ return await ────────────────────────────────
+async function withReturnAwait() {
+  try {
+    return await fail()
+  } catch (e) {
+    return `✅ catch 捕获到：${e.message}`
+  }
+}
+async function withoutReturnAwait() {
+  try {
+    return fail()            // ❌ 返回了 Promise，但没有 await，catch 不生效
+  } catch (e) {
+    return `catch 捕获到：${e.message}`
+  }
+}
+
+async function p3() {
+  const before = unhandled.length
+  const r1 = await withReturnAwait()
+  const r2 = await withoutReturnAwait().catch(e => `Promise 最终 rejected：${e.message}`)
+  await delay(50)
+
+  const escaped = unhandled.length > before ? unhandled[unhandled.length - 1] : '(无)'
+
+  document.getElementById('o3').innerHTML =
+`return await fail()   →  ${r1}
+return fail()         →  ${r2}
+                      →  逃逸的拒绝：${escaped}
+
+结论：try 块里要捕获这个 Promise 的失败，就必须 await；
+     不在 try 里时，直接 return 更省一次微任务调度。`
+}
+</script>
+
+</body>
+</html>

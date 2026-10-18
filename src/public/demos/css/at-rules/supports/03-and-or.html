@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@supports and / or</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+.box {
+  padding: 16px;
+  border-radius: 8px;
+  background: #eee;
+  margin-bottom: 12px;
+}
+
+/* and：两个条件都满足 */
+@supports (display: grid) and (gap: 1rem) {
+  .a {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background: #c8e6c9;
+  }
+}
+
+/* or：满足任一即可 */
+@supports (display: flex) or (display: grid) {
+  .b {
+    display: flex;
+    gap: 12px;
+    background: #bbdefb;
+  }
+}
+
+/* 组合：先分组，再组合 */
+@supports ((display: grid) or (display: flex)) and (gap: 8px) {
+  .c {
+    background: #ffe0b2;
+    font-weight: bold;
+  }
+}
+
+.item { padding: 10px; background: white; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<div class="box a">
+  <div class="item">and：grid + gap 都支持</div>
+  <div class="item">两列网格</div>
+</div>
+
+<div class="box b">
+  <div class="item">or：flex 或 grid 任一支持</div>
+  <div class="item">横向排列</div>
+</div>
+
+<div class="box c">
+  <div class="item">组合条件也能成立</div>
+</div>
+
+</body>
+</html>

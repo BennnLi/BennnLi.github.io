@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@container 嵌套容器</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+/* 外层容器：宽 600px */
+.lv1 {
+  container-type: inline-size;
+  container-name: lv1;
+  width: 600px;
+  border: 2px dashed #6f42c1;
+  padding: 12px;
+}
+
+/* 内层容器：宽 250px */
+.lv2 {
+  container-type: inline-size;
+  container-name: lv2;
+  width: 250px;
+  border: 2px dashed #1a73e8;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.box { padding: 10px; background: #f0f0f0; border-radius: 6px; margin-bottom: 10px; }
+
+/* 查 lv1（600px ≥ 500px 成立） */
+@container lv1 (min-width: 500px) {
+  .a { background: #6f42c1; color: white; }
+}
+
+/* 查 lv2（250px ≥ 500px 不成立） */
+@container lv2 (min-width: 500px) {
+  .b { background: #dc3545; color: white; }
+}
+
+/* 不写名字 → 用最近的容器（= lv2，250px ≥ 200px 成立） */
+@container (min-width: 200px) {
+  .c { background: #1a73e8; color: white; }
+}
+</style>
+</head>
+<body>
+
+<div class="lv1">
+  lv1 = 600px
+
+  <div class="box a">A：查 lv1 → 600 ≥ 500，变紫 ✓（跳过内层，查找外层）</div>
+
+  <div class="lv2">
+    lv2 = 250px
+
+    <div class="box b">B：查 lv2 → 250 &lt; 500，不变红 ✗</div>
+
+    <div class="box c">C：不写名字 → 最近的容器是 lv2（250 ≥ 200），变蓝 ✓</div>
+  </div>
+</div>
+
+</body>
+</html>

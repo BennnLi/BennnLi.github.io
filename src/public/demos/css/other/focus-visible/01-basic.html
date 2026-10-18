@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:focus-visible 基础用法</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== :focus-visible 基础 ========== */
+button:focus-visible {
+  outline: 2px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========== 演示 ========== */
+.buttons {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.button:hover {
+  background: #f0f0f0;
+}
+
+.button-primary {
+  background: #1a73e8;
+  color: white;
+  border-color: #1a73e8;
+}
+
+.button-primary:hover {
+  background: #1557b0;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #d4edda;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #155724;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:focus-visible 基础</strong> — 只在键盘导航时显示焦点环
+</div>
+
+<div class="container">
+  <h2>1. 按钮焦点样式</h2>
+  <p class="code">button:focus-visible { outline: 2px solid #1a73e8; }</p>
+  <p>用鼠标点击按钮，不会显示焦点环。用 Tab 键导航，会显示焦点环。</p>
+  <div class="buttons">
+    <button class="button">默认按钮</button>
+    <button class="button button-primary">主要按钮</button>
+    <button class="button">另一个按钮</button>
+  </div>
+  <div class="note">
+    <strong>技巧：</strong>用 Tab 键在按钮之间切换，观察焦点环的显示。用鼠标点击，焦点环不会显示。
+  </div>
+</div>
+
+<div class="container">
+  <h2>2. :focus vs :focus-visible</h2>
+  <div class="buttons">
+    <button class="button" style="outline: 2px solid #dc3545;">:focus（始终显示）</button>
+    <button class="button button-primary">:focus-visible（键盘时显示）</button>
+  </div>
+</div>
+
+</body>
+</html>

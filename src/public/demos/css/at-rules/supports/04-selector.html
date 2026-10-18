@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@supports selector()</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+
+.card {
+  padding: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background: #f8f9fa;
+}
+
+.card .img {
+  height: 60px;
+  background: #1a73e8;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* 检测 :has() 是否支持 */
+@supports selector(:has(img)) {
+  .card:has(img) {
+    border-color: #28a745;
+    background: #f0fff0;
+  }
+  /* 用 ::after 标注命中了哪条规则 */
+  .card:has(img)::after {
+    content: ' ← 命中了 @supports selector(:has(img))';
+    color: #28a745;
+    font-size: 12px;
+  }
+}
+
+/* 检测 ::marker 是否支持 */
+@supports selector(::marker) {
+  li::marker { color: #dc3545; font-weight: bold; }
+}
+</style>
+</head>
+<body>
+
+<p>下面两张卡片，第一张含图片、第二张不含：</p>
+
+<div class="card">
+  <div class="img"></div>
+  这张卡片含有图片
+</div>
+
+<div class="card">
+  这张卡片没有图片
+</div>
+
+<ul>
+  <li>列表项（::marker 支持时标记变红）</li>
+  <li>列表项</li>
+</ul>
+
+</body>
+</html>

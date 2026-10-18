@@ -1,0 +1,10 @@
+node_modules/
+.npm-cache/
+
+# 生成产物（文档本身不再被忽略，直接在 src/ 中维护）
+sidebar.gen.ts
+src/index.md
+
+# 构建产物
+.vitepress/dist/
+.vitepress/cache/

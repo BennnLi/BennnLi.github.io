@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>color-mix() 基础用法</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 混合示例 ========== */
+.color-row {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.color-box {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 8px;
+  font-size: 11px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* ========== 不同混合比例 ========== */
+.mix-0   { background: color-mix(in srgb, #1a73e8 0%, #ff897e 100%); }
+.mix-25  { background: color-mix(in srgb, #1a73e8 25%, #ff897e 75%); }
+.mix-50  { background: color-mix(in srgb, #1a73e8 50%, #ff897e 50%); }
+.mix-75  { background: color-mix(in srgb, #1a73e8 75%, #ff897e 25%); }
+.mix-100 { background: color-mix(in srgb, #1a73e8 100%, #ff897e 0%); }
+
+/* ========== 不同色彩空间 ========== */
+.mix-srgb { background: color-mix(in srgb, #1a73e8 50%, #ff897e 50%); }
+.mix-oklch { background: color-mix(in oklch, #1a73e8 50%, #ff897e 50%); }
+.mix-hsl { background: color-mix(in hsl, #1a73e8 50%, #ff897e 50%); }
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>color-mix() 基础</strong> — 在指定色彩空间中混合两种颜色
+</div>
+
+<div class="container">
+  <h2>1. 不同混合比例</h2>
+  <p class="code">color-mix(in srgb, #1a73e8 var(--pct), #ff897e calc(100% - var(--pct)))</p>
+  <div class="color-row">
+    <div class="color-box mix-0">0%</div>
+    <div class="color-box mix-25">25%</div>
+    <div class="color-box mix-50">50%</div>
+    <div class="color-box mix-75">75%</div>
+    <div class="color-box mix-100">100%</div>
+  </div>
+</div>
+
+<div class="container">
+  <h2>2. 不同色彩空间</h2>
+  <p class="code">color-mix(in srgb/hsl/hwb, #1a73e8 50%, #ff897e 50%)</p>
+  <div class="color-row">
+    <div class="color-box mix-srgb">srgb</div>
+    <div class="color-box mix-oklch">oklch</div>
+    <div class="color-box mix-hsl">hsl</div>
+  </div>
+  <p><strong>注意：</strong>不同色彩空间混合结果不同，srgb 是最常用的标准色彩空间。</p>
+</div>
+
+<div class="container">
+  <h2>3. </h2>
+  <div class="color-box" style="background: hsl(233, 50%, 40%)"></div>
+</div>
+
+</body>
+</html>

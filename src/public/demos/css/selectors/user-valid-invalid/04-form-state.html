@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:user-valid / :user-invalid 表单状态</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 表单整体验证状态 ========== */
+form:user-valid button[type="submit"] {
+  background: #28a745;
+  cursor: pointer;
+}
+
+form:user-invalid button[type="submit"] {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ========== 输入框验证状态 ========== */
+input:user-valid {
+  border-color: #28a745;
+}
+
+input:user-invalid {
+  border-color: #dc3545;
+}
+
+/* ========== 演示 ========== */
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:user-valid / :user-invalid 表单状态</strong> — 表单整体验证状态
+</div>
+
+<div class="container">
+  <h2>表单状态示例</h2>
+  <p class="code">form:user-valid button[type="submit"] { background: #28a745; }</p>
+
+  <form>
+    <div class="form-group">
+      <label>用户名</label>
+      <input type="text" required placeholder="请输入用户名">
+    </div>
+
+    <div class="form-group">
+      <label>邮箱</label>
+      <input type="email" required placeholder="请输入邮箱">
+    </div>
+
+    <div class="form-group">
+      <label>密码</label>
+      <input type="password" minlength="8" required placeholder="请输入密码">
+    </div>
+
+    <button type="submit">提交</button>
+  </form>
+</div>
+
+</body>
+</html>

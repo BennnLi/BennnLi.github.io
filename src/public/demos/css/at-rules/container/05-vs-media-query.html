@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@media vs @container</title>
+<style>
+body { font-family: sans-serif; padding: 20px; display: flex; gap: 20px; }
+
+/* 两个容器都只有 250px 宽 */
+.wrap {
+  width: 250px;
+  border: 2px dashed #1a73e8;
+  padding: 12px;
+}
+
+/* 右容器声明为查询容器 */
+.right { container-type: inline-size; }
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* 左：@media 看视口。把窗口拉宽到 ≥ 900px 时命中 */
+@media (min-width: 900px) {
+  .left .card { flex-direction: row; background: #ffe0e0; }
+}
+
+/* 右：@container 看容器（250px），永不命中 */
+@container (min-width: 400px) {
+  .right .card { flex-direction: row; background: #e0ffe0; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap left">
+  <b>@media</b>
+  <div class="card">窗口拉宽到 900px 以上时，我变横排——但我只有 250px 宽，横排会挤扁</div>
+</div>
+
+<div class="wrap right">
+  <b>@container</b>
+  <div class="card">我只看自己的 250px 容器，所以无论窗口多宽，都保持竖排</div>
+</div>
+
+</body>
+</html>

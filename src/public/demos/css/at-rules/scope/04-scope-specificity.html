@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@scope — 不增加特异性</title>
+<style>
+/* -------- @scope 方案：不增加特异性 -------- */
+@scope (.scope-way) {
+  .title { color: green; }
+}
+
+/* -------- 传统嵌套方案：增加了特异性 -------- */
+.traditional-way .title { color: red; }
+
+/* -------- 全局 -------- */
+.title { color: blue; }
+
+body {
+  font-family: sans-serif;
+  display: flex; gap: 30px;
+  padding: 40px; background: #f5f5f5;
+}
+.box {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<!-- @scope 方式：.title 特异性 = (0,1,0)，会被后面的全局 .title 覆盖 -->
+<div class="scope-way box">
+  <span class="title">@scope 内 → 蓝色</span>
+  <br><small>scope 不增加特异性，被全局 .title { color: blue } 覆盖</small>
+</div>
+
+<!-- 传统嵌套：.traditional-way .title 特异性 = (0,2,0)，不会被全局覆盖 -->
+<div class="traditional-way box">
+  <span class="title">传统嵌套 → 红色</span>
+  <br><small>特异性 (0,2,0) 高于全局 (0,1,0)</small>
+</div>
+
+</body>
+</html>

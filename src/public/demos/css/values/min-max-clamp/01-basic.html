@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>min() / max() / clamp() 基础用法</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== min() 示例 ========== */
+.min-box {
+  width: min(90%, 600px);
+  padding: 20px;
+  background: #e8f0fe;
+  border-radius: 8px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+/* ========== max() 示例 ========== */
+.max-box {
+  width: max(50%, 300px);
+  padding: 20px;
+  background: #d4edda;
+  border-radius: 8px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+/* ========== clamp() 示例 ========== */
+.clamp-box {
+  width: clamp(200px, 50%, 600px);
+  padding: 20px;
+  background: #fff3cd;
+  border-radius: 8px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+/* ========== 流体字号 ========== */
+.fluid-h1 {
+  font-size: clamp(1.5rem, 4vw + 0.5rem, 3rem);
+  margin: 16px 0;
+}
+
+.fluid-p {
+  font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+  margin: 16px 0;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #d4edda;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #155724;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>min() / max() / clamp() 基础</strong> — 在不同条件下取最合适的值
+</div>
+
+<div class="container">
+  <h2>1. min() — 取最小值</h2>
+  <p class="code">width: min(90%, 600px);</p>
+  <div class="min-box">
+    宽度 = min(90%, 600px) — 取两者中较小的值
+  </div>
+</div>
+
+<div class="container">
+  <h2>2. max() — 取最大值</h2>
+  <p class="code">width: max(50%, 300px);</p>
+  <div class="max-box">
+    宽度 = max(50%, 300px) — 取两者中较大的值
+  </div>
+</div>
+
+<div class="container">
+  <h2>3. clamp() — 取中间值，限定范围</h2>
+  <p class="code">width: clamp(200px, 50%, 600px);</p>
+  <div class="clamp-box">
+    宽度 = clamp(200px, 50%, 600px) — 最小 200px，最大 600px，理想值 50%
+  </div>
+</div>
+
+<div class="container">
+  <h2>4. 流体字号</h2>
+  <p class="code">font-size: clamp(1.5rem, 4vw + 0.5rem, 3rem);</p>
+  <h1 class="fluid-h1">这是一个流体字号的标题</h1>
+  <p class="fluid-p">这是一个流体字号的段落，会根据视口大小自动调整。</p>
+  <div class="note">
+    <strong>技巧：</strong>调整浏览器窗口大小，观察字号的变化。clamp() 会让字号在最小值和最大值之间平滑过渡。
+  </div>
+</div>
+
+</body>
+</html>

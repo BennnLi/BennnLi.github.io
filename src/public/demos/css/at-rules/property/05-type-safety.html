@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@property — 类型安全</title>
+<style>
+/* ========== 注册颜色属性，类型不匹配的值会被忽略 ========== */
+@property --safe-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #3498db;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.row {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.col {
+  text-align: center;
+}
+
+.col p {
+  font-size: 13px;
+  color: #666;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+}
+
+/* 有效值 */
+.valid {
+  --safe-color: #e74c3c;
+  background: var(--safe-color);
+}
+
+/* 无效值：42px 不是 <color>，赋值被忽略，回退到 initial-value */
+.invalid {
+  --safe-color: 42px;
+  background: var(--safe-color);
+}
+</style>
+</head>
+<body>
+
+<div class="row">
+  <div class="col">
+    <div class="box valid"></div>
+    <p>✅ <code>--safe-color: #e74c3c</code><br>有效的颜色值</p>
+  </div>
+  <div class="col">
+    <div class="box invalid"></div>
+    <p>❌ <code>--safe-color: 42px</code><br>无效 → 回退到 <code>initial-value: #3498db</code></p>
+  </div>
+</div>
+
+</body>
+</html>

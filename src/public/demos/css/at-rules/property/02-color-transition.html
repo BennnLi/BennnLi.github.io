@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@property — 颜色过渡</title>
+<style>
+/* ========== 注册颜色属性，使其支持 transition ========== */
+@property --bg {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #3498db;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.box {
+  --bg: #3498db;
+  width: 150px;
+  height: 150px;
+  background: var(--bg);
+  border-radius: 12px;
+  /* transition 直接作用于自定义属性 */
+  transition: --bg 0.4s ease;
+}
+
+.box:hover {
+  --bg: #e74c3c;
+}
+</style>
+</head>
+<body>
+
+<p>悬停方块，<code>--bg</code> 从蓝平滑过渡到红</p>
+<div class="box"></div>
+
+</body>
+</html>

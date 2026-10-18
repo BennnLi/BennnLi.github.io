@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@starting-style — 配合 :has() 切换主题</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+  transition: background 0.4s;
+}
+
+.card {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 300px;
+  opacity: 1;
+  transition: background 0.4s, color 0.4s, opacity 0.3s;
+}
+
+/* 切换类名时触发起始状态 */
+body.dark .card {
+  background: #1a1a2e;
+  color: #e0e0e0;
+}
+
+@starting-style {
+  body.dark .card {
+    opacity: 0.8;
+  }
+}
+
+button {
+  padding: 10px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<button onclick="toggle()">切换暗色模式</button>
+
+<div class="card">
+  <h3>主题切换</h3>
+  <p>切换时卡片有轻微的透明度过渡</p>
+</div>
+
+<script>
+function toggle() {
+  document.body.classList.toggle('dark')
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>await 基础</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 10px; font-size: 15px; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+pre { background: #262b33; color: #e0e0e0; padding: 12px; border-radius: 6px;
+      font-size: 12px; margin: 8px 0; overflow-x: auto; }
+.out { font-family: monospace; font-size: 13px; background: #f8f9fa;
+       border-left: 3px solid #1a73e8; padding: 8px 12px; border-radius: 0 6px 6px 0;
+       margin-top: 8px; white-space: pre-wrap; }
+.note { background: #e8f0fe; color: #1a73e8; padding: 10px 14px; border-radius: 6px;
+        font-size: 13px; margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<h3>await 右边可以是任意值</h3>
+<pre>async function f() {
+  const n = await 42       // 42
+  const s = await 'hello'  // 'hello'
+  const o = await { a: 1 } // { a: 1 }
+  const p = await Promise.resolve('来自 Promise')
+}</pre>
+
+<button onclick="run('number')">await 42</button>
+<button onclick="run('string')">await 'hello'</button>
+<button onclick="run('object')">await { a: 1 }</button>
+<button onclick="run('promise')">await Promise.resolve(...)</button>
+
+<div class="out" id="out">点按钮看看 await 拿到了什么</div>
+
+<div class="note">
+  原理：<code>await expr</code> 内部第一步就是把 <code>expr</code> 交给
+  <strong><code>Promise.resolve()</code></strong>，所以非 Promise 值也能 await。<br>
+  但要记住：<strong>不论右边是不是 Promise，<code>await</code> 之后的代码都是异步执行的</strong>
+  （见下一个示例 <code>03-execution-order</code>）。
+</div>
+
+<script>
+async function f(which) {
+  switch (which) {
+    case 'number':  return await 42
+    case 'string':  return await 'hello'
+    case 'object':  return await { a: 1 }
+    case 'promise': return await Promise.resolve('来自 Promise')
+  }
+}
+
+async function run(which) {
+  const raw = {
+    number: '42',
+    string: "'hello'",
+    object: '{ a: 1 }',
+    promise: 'Promise.resolve("来自 Promise")',
+  }[which]
+
+  const t0 = performance.now()
+  const value = await f(which)
+  const dt = (performance.now() - t0).toFixed(2)
+
+  document.getElementById('out').textContent =
+    `await ${raw}\n` +
+    `  →  值：${JSON.stringify(value)}（类型 ${typeof value}）\n` +
+    `  →  耗时：${dt} ms（几乎是 0，说明没有真正等待）\n\n` +
+    `四种情况都正常返回 —— await 会把任何值包装成 Promise 再取出来。`
+}
+</script>
+
+</body>
+</html>

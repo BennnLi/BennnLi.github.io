@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>includes 基础用法</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 10px; font-size: 15px; }
+.row { margin-bottom: 18px; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+pre { background: #262b33; color: #e0e0e0; padding: 12px; border-radius: 6px;
+      font-size: 12px; margin: 8px 0 0; overflow-x: auto; }
+.out { font-family: monospace; font-size: 13px; background: #f8f9fa; border-left: 3px solid #1a73e8;
+       padding: 8px 12px; border-radius: 0 6px 6px 0; margin-top: 8px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<div class="row">
+  <h3>1. 基础判断</h3>
+  <code>const array = [1, 2, '3', false]</code>
+  <div style="margin-top:8px">
+    <button onclick="basic(1)">array.includes(1)</button>
+    <button onclick="basic(false)">array.includes(false)</button>
+    <button onclick="basic(100)">array.includes(100)</button>
+    <button onclick="basic('3')">array.includes('3')</button>
+  </div>
+  <div class="out" id="out1">点上面的按钮试试</div>
+</div>
+
+<div class="row">
+  <h3>2. fromIndex —— 从哪个下标开始找</h3>
+  <code>const arr = ['a', 'b', 'c', 'b']</code>
+  <div style="margin-top:8px">
+    <button onclick="fromIdx('b')">arr.includes('b')</button>
+    <button onclick="fromIdx('b', 2)">arr.includes('b', 2)</button>
+    <button onclick="fromIdx('a', 1)">arr.includes('a', 1)</button>
+    <button onclick="fromIdx('b', -1)">arr.includes('b', -1)</button>
+  </div>
+  <div class="out" id="out2">点上面的按钮试试</div>
+</div>
+
+<div class="row">
+  <h3>3. 判断「有没有这个值」而不是「找个位置」</h3>
+  <pre>// 以前：为了判断存在，却要处理一个下标
+if (arr.indexOf('b') !== -1) { ... }
+
+// 现在：语义直接就是「包含」
+if (arr.includes('b')) { ... }</pre>
+</div>
+
+<script>
+const array = [1, 2, '3', false]
+const arr = ['a', 'b', 'c', 'b']
+
+function basic(v) {
+  const label = typeof v === 'string' ? `'${v}'` : v
+  document.getElementById('out1').textContent =
+    `array.includes(${label})  →  ${array.includes(v)}`
+}
+
+function fromIdx(v, from) {
+  const label = typeof v === 'string' ? `'${v}'` : v
+  const call = from === undefined ? `arr.includes(${label})` : `arr.includes(${label}, ${from})`
+  const at = from === undefined ? '从头开始' : `从下标 ${from < 0 ? `数组长度 ${from}` : from} 开始`
+  document.getElementById('out2').textContent =
+    `${call}  →  ${arr.includes(v, from)}\n（${at}：${JSON.stringify(arr)}）`
+}
+</script>
+
+</body>
+</html>

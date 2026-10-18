@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:nth-child(of S) 混合元素</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 选中第 2 个 .card ========== */
+.card:nth-child(2 of .card) {
+  border-left: 4px solid #1a73e8;
+  background: #e8f0fe;
+}
+
+/* ========== 选中奇数个 .active ========== */
+.active:nth-child(odd of .active) {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* ========== 演示 ========== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.card {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  transition: all 0.2s;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.card p {
+  margin-bottom: 0;
+  color: #666;
+}
+
+.divider {
+  height: 1px;
+  background: #ddd;
+  margin: 16px 0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.list li {
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 4px;
+  background: #f8f9fa;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:nth-child(of S) 混合元素</strong> — 在混合元素中选中特定类型
+</div>
+
+<div class="container">
+  <h2>1. 选中第 2 个 .card</h2>
+  <p class="code">.card:nth-child(2 of .card) { border-left: 4px solid #1a73e8; }</p>
+  <div class="grid">
+    <div class="card">
+      <h3>卡片 1</h3>
+      <p>普通卡片</p>
+    </div>
+    <div class="card">
+      <h3>卡片 2</h3>
+      <p>选中的卡片</p>
+    </div>
+    <div class="card">
+      <h3>卡片 3</h3>
+      <p>普通卡片</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="container">
+  <h2>2. 选中奇数个 .active</h2>
+  <p class="code">.active:nth-child(odd of .active) { color: #dc3545; font-weight: bold; }</p>
+  <ul class="list">
+    <li>普通项目</li>
+    <li class="active">active 项目 1（奇数 - 红色）</li>
+    <li class="active">active 项目 2（偶数）</li>
+    <li>普通项目</li>
+    <li class="active">active 项目 3（奇数 - 红色）</li>
+    <li class="active">active 项目 4（偶数）</li>
+  </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:user-valid vs :valid 对比</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== :valid — 页面加载时就匹配 ========== */
+.valid-demo input:valid {
+  border-color: #28a745;
+  background-color: #f8fff8;
+}
+
+.valid-demo input:invalid {
+  border-color: #dc3545;
+  background-color: #fff8f8;
+}
+
+/* ========== :user-valid — 用户交互后才匹配 ========== */
+.user-valid-demo input:user-valid {
+  border-color: #28a745;
+  background-color: #f8fff8;
+}
+
+.user-valid-demo input:user-invalid {
+  border-color: #dc3545;
+  background-color: #fff8f8;
+}
+
+/* ========== 演示 ========== */
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #fff3cd;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #856404;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:user-valid vs :valid 对比</strong> — 理解匹配时机的差异
+</div>
+
+<div class="container">
+  <h2>:valid / :invalid — 页面加载时就匹配</h2>
+  <p class="code">input:valid { border-color: green; } input:invalid { border-color: red; }</p>
+  <div class="valid-demo">
+    <div class="form-group">
+      <label>邮箱（必填）</label>
+      <input type="email" required placeholder="请输入邮箱">
+    </div>
+    <div class="form-group">
+      <label>数字（1-10）</label>
+      <input type="number" min="1" max="10" required placeholder="请输入 1-10 的数字">
+    </div>
+  </div>
+  <div class="note">
+    <strong>注意：</strong>页面一加载，空的输入框就显示红色边框（:invalid 状态）
+  </div>
+</div>
+
+<div class="container">
+  <h2>:user-valid / :user-invalid — 用户交互后才匹配</h2>
+  <p class="code">input:user-valid { border-color: green; } input:user-invalid { border-color: red; }</p>
+  <div class="user-valid-demo">
+    <div class="form-group">
+      <label>邮箱（必填）</label>
+      <input type="email" required placeholder="请输入邮箱">
+    </div>
+    <div class="form-group">
+      <label>数字（1-10）</label>
+      <input type="number" min="1" max="10" required placeholder="请输入 1-10 的数字">
+    </div>
+  </div>
+  <div class="note">
+    <strong>注意：</strong>页面加载时，输入框保持默认样式，只有用户输入后才显示验证状态
+  </div>
+</div>
+
+</body>
+</html>

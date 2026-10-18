@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@property — 基本注册</title>
+<style>
+/* ========== 注册一个颜色类型的自定义属性 ========== */
+@property --box-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #3498db;
+}
+
+/* ========== 注册一个长度类型的自定义属性 ========== */
+@property --box-size {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 100px;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.box {
+  --box-color: #333;
+  width: var(--box-size);
+  height: var(--box-size);
+  background: var(--box-color);
+  border-radius: 12px;
+  transition: all 1s;
+}
+
+.box:hover {
+  --box-color: red;
+}
+
+/* 未显式设置 --box-size 时，回退到 initial-value: 100px */
+</style>
+</head>
+<body>
+
+<p>通过 <code>@property</code> 注册 <code>--box-color</code>（类型 <code>&lt;color&gt;</code>）和 <code>--box-size</code>（类型 <code>&lt;length&gt;</code>）</p>
+<div class="box"></div>
+
+</body>
+</html>

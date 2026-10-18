@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>await 的执行顺序</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 10px; font-size: 15px; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+pre { background: #262b33; color: #e0e0e0; padding: 12px; border-radius: 6px;
+      font-size: 12px; margin: 8px 0; overflow-x: auto; }
+.log { font-family: monospace; font-size: 13px; background: #f8f9fa; border-radius: 6px;
+       padding: 10px 12px; margin-top: 10px; min-height: 90px; }
+.log div { padding: 2px 0; border-bottom: 1px dashed #e5e5e5; }
+.log div:last-child { border-bottom: 0; }
+.t { color: #999; }
+.order { display: inline-block; background: #1a73e8; color: #fff; border-radius: 4px;
+         padding: 0 6px; margin-right: 6px; font-size: 12px; }
+.note { background: #e8f0fe; color: #1a73e8; padding: 10px 14px; border-radius: 6px;
+        font-size: 13px; margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<h3>为什么输出是 1 → 2 → 3，而不是 1 → 3 → 2</h3>
+<pre>async function f() {
+  console.log(1)
+  await null          // 即使 await null 也会让出
+  console.log(3)
+}
+
+f()
+console.log(2)</pre>
+
+<button onclick="run()">运行</button>
+<button onclick="clearLog()">清空</button>
+
+<div class="log" id="log"></div>
+
+<div class="note">
+  <strong>原因：</strong><code>async</code> 函数被调用时，函数体是<strong>同步执行到第一个
+  <code>await</code></strong> 的 —— 所以 <code>1</code> 立刻打印；到 <code>await</code> 就"让出"，
+  把后续代码排进<strong>微任务队列</strong>并返回 Promise；于是主线程继续跑
+  <code>console.log(2)</code>；等同步代码跑完，才轮到微任务里的 <code>3</code>。
+</div>
+
+<script>
+let n = 0
+const logEl = document.getElementById('log')
+
+function clearLog() { n = 0; logEl.innerHTML = '' }
+
+function log(msg) {
+  n++
+  const t = performance.now().toFixed(2)
+  const div = document.createElement('div')
+  div.innerHTML = `<span class="order">${n}</span><span class="t">[${t} ms]</span> ${msg}`
+  logEl.appendChild(div)
+}
+
+async function f() {
+  log('① f() 内部：console.log(1)  —— 同步执行')
+  await null
+  log('③ 微任务中：console.log(3)  —— await 之后的代码')
+}
+
+function run() {
+  clearLog()
+  log('▶ 调用 f()')
+  f()
+  log('② 主线程：console.log(2)  —— 同步代码先跑完')
+}
+</script>
+
+</body>
+</html>

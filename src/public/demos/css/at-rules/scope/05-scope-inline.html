@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@scope — 内联 style 自动确定 root</title>
+</head>
+<body style="font-family: sans-serif; padding: 40px; background: #f5f5f5; display: flex; gap: 20px;">
+
+<!-- style 标签在 card 内部，@scope 省略 root → 自动以父 .card 为 root -->
+<div class="card" style="background:#fff; border-radius:12px; padding:20px; width:200px;">
+  <style>
+    @scope {
+      :scope {
+        border: 2px solid #1677ff;
+        border-radius: 12px;
+        padding: 20px;
+        background: #fff;
+      }
+      h3 { color: #1677ff; }
+      p  { color: #666; }
+    }
+  </style>
+  <h3>组件 A</h3>
+  <p>内联 style + @scope 自动隔离</p>
+</div>
+
+<!-- 另一个组件，完全独立的 scope -->
+<div class="card" style="background:#fff; border-radius:12px; padding:20px; width:200px;">
+  <style>
+    @scope {
+      :scope {
+        border: 2px solid #52c41a;
+        border-radius: 12px;
+        padding: 20px;
+        background: #fff;
+      }
+      h3 { color: #52c41a; }
+      p  { color: #999; }
+    }
+  </style>
+  <h3>组件 B</h3>
+  <p>两个组件样式完全隔离</p>
+</div>
+
+</body>
+</html>

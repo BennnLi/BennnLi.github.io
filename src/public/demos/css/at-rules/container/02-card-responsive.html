@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@container 卡片自适应</title>
+<style>
+body { font-family: sans-serif; padding: 20px; display: flex; gap: 20px; }
+
+/* 两个宽度不同的容器 */
+.wrap {
+  container-type: inline-size;
+  border: 2px dashed #1a73e8;
+  padding: 12px;
+}
+.narrow { width: 240px; }
+.wide   { width: 460px; }
+
+/* 卡片：默认竖排 */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+}
+.card .img {
+  height: 80px;
+  background: #1a73e8;
+  border-radius: 6px;
+}
+.card p { margin: 0; color: #666; font-size: 14px; }
+
+/* 容器 ≥ 400px 时改横排 */
+@container (min-width: 400px) {
+  .card { flex-direction: row; align-items: center; }
+  .card .img { width: 100px; height: 70px; flex-shrink: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap narrow">
+  <div class="card">
+    <div class="img"></div>
+    <p>窄容器 240px → 竖排</p>
+  </div>
+</div>
+
+<div class="wrap wide">
+  <div class="card">
+    <div class="img"></div>
+    <p>宽容器 460px → 横排（同一份卡片代码）</p>
+  </div>
+</div>
+
+</body>
+</html>

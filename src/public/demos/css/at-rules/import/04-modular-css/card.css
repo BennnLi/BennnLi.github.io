@@ -1,0 +1,14 @@
+.content {
+  display: flex; gap: 16px;
+  padding: var(--spacing-lg);
+  max-width: 800px; margin: 0 auto;
+}
+.card {
+  flex: 1;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 3px solid var(--color-primary);
+}
+.card h3 { color: var(--color-primary); margin-bottom: 8px; }
+.card p  { color: #666; line-height: 1.6; }

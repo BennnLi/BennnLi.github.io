@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>includes vs indexOf</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 10px; font-size: 15px; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 14px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eee; }
+th { background: #f8f9fa; }
+.mono { font-family: monospace; font-size: 13px; }
+.bad { color: #dc3545; font-weight: bold; }
+.good { color: #28a745; font-weight: bold; }
+.note { background: #fff3cd; color: #856404; padding: 10px 14px; border-radius: 6px;
+        font-size: 13px; margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<h3>核心差异：能不能找到 NaN</h3>
+<button onclick="run()">运行对比</button>
+
+<div id="result"></div>
+
+<div class="note">
+  <strong>为什么？</strong> <code>indexOf</code> 用严格相等（<code>===</code>）比较，而
+  <code>NaN === NaN</code> 是 <code>false</code>，所以永远找不到自己。
+  <code>includes</code> 改用 <strong>SameValueZero</strong> 算法，把 <code>NaN</code> 视为等于自身。
+</div>
+
+<div class="note" style="background:#e8f0fe;color:#1a73e8">
+  <strong>SameValueZero 小知识：</strong>它还规定 <code>+0</code> 和 <code>-0</code> 相等，
+  这一点与 <code>===</code> 一致。所以 <code>[0].includes(-0)</code> 也是 <code>true</code>。
+</div>
+
+<script>
+const cases = [
+  { label: "['a', 'b'].includes('b')",        includes: ['a','b'].includes('b'),        indexOf: ['a','b'].indexOf('b') },
+  { label: "['a', 'b'].includes('z')",        includes: ['a','b'].includes('z'),        indexOf: ['a','b'].indexOf('z') },
+  { label: "[NaN].includes(NaN)",             includes: [NaN].includes(NaN),            indexOf: [NaN].indexOf(NaN) },
+  { label: "[0].includes(-0)",                includes: [0].includes(-0),               indexOf: [0].indexOf(-0) },
+  { label: "[1, 2, 3].includes('2')",         includes: [1,2,3].includes('2'),          indexOf: [1,2,3].indexOf('2') },
+]
+
+function run() {
+  let html = `<table>
+    <thead><tr><th>表达式</th><th>includes</th><th>indexOf</th><th>判断存在</th></tr></thead><tbody>`
+
+  for (const c of cases) {
+    const byIndexOf = c.indexOf !== -1
+    const agree = c.includes === byIndexOf
+    html += `<tr>
+      <td class="mono">${c.label}</td>
+      <td class="${c.includes ? 'good' : ''}">${c.includes}</td>
+      <td class="mono">${c.indexOf}</td>
+      <td class="${agree ? '' : 'bad'}">${agree ? '一致' : '⚠️ 不一致'}</td>
+    </tr>`
+  }
+
+  html += `</tbody></table>
+  <div class="note">看第 3 行：<code>[NaN].includes(NaN)</code> 是 <code>true</code>，
+  但 <code>[NaN].indexOf(NaN)</code> 是 <code>-1</code> ——
+  <strong>用 indexOf 判断 NaN 会得到错误结论</strong>。</div>`
+
+  document.getElementById('result').innerHTML = html
+}
+
+run()
+</script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:is() 嵌套选择器 — 配合伪类和组合器</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== :is() 配合伪类 ========== */
+:is(a[href], button):hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+  transition: all 0.2s;
+}
+
+:is(a[href], button):active {
+  transform: translateY(0);
+}
+
+/* ========== :is() 配合否定伪类 ========== */
+li:is(:not(:first-child), :not(:last-child)) {
+  border-top: 1px solid #eee;
+}
+
+/* ========== :is() 配合兄弟组合器 ========== */
+:is(h1, h2, h3) + p {
+  margin-top: 0;
+  color: #666;
+}
+
+/* ========== 实际应用 ========== */
+nav {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+a {
+  color: #1a73e8;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+a:hover {
+  background: #e8f0fe;
+}
+
+button {
+  padding: 8px 16px;
+  border: 1px solid #1a73e8;
+  background: white;
+  color: #1a73e8;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: #1a73e8;
+  color: white;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+li {
+  padding: 12px 16px;
+}
+
+li:first-child {
+  font-weight: bold;
+  color: #1a73e8;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:is() 嵌套选择器</strong> — 配合伪类和组合器
+</div>
+
+<div class="container">
+  <h2>1. 配合 :hover 伪类</h2>
+  <p>所有带 href 的链接和按钮，鼠标悬停时有相同效果：</p>
+  <nav>
+    <a href="#">首页</a>
+    <a href="#">关于</a>
+    <a href="#">联系</a>
+    <button>登录</button>
+  </nav>
+</div>
+
+<div class="container">
+  <h2>2. 配合 :not() 伪类</h2>
+  <p>选中非第一个、非最后一个子元素（跳过首尾）：</p>
+  <ul>
+    <li>第一项（无边框）</li>
+    <li>第二项（有上边框）</li>
+    <li>第三项（有上边框）</li>
+    <li>第四项（有上边框）</li>
+    <li>第五项（无边框）</li>
+  </ul>
+</div>
+
+<div class="container">
+  <h2>3. 配合兄弟组合器 +</h2>
+  <p>标题后的段落样式：</p>
+  <h1>一级标题</h1>
+  <p>这是 h1 后的段落，颜色为灰色。</p>
+  <h2>二级标题</h2>
+  <p>这是 h2 后的段落，颜色为灰色。</p>
+  <p>这是普通段落，不受影响。</p>
+</div>
+
+</body>
+</html>

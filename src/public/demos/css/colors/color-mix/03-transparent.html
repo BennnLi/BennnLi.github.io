@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>color-mix() 透明色</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 用 color-mix() 生成透明色 ========== */
+.overlay {
+  background: color-mix(in srgb, #1a73e8 50%, transparent);
+  padding: 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.badge {
+  background: color-mix(in srgb, #1a73e8 20%, white);
+  color: #1a73e8;
+  padding: 8px 16px;
+  border-radius: 16px;
+  display: inline-block;
+  margin: 8px 4px;
+  font-weight: bold;
+}
+
+.badge-green {
+  background: color-mix(in srgb, #28a745 20%, white);
+  color: #28a745;
+}
+
+.badge-red {
+  background: color-mix(in srgb, #dc3545 20%, white);
+  color: #dc3545;
+}
+
+/* ========== 演示 ========== */
+.overlay-demo {
+  position: relative;
+  height: 200px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.overlay-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: color-mix(in srgb, #000 60%, transparent);
+  color: white;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>color-mix() 透明色</strong> — 用 color-mix() 生成半透明和浅色背景
+</div>
+
+<div class="container">
+  <h2>1. 半透明背景</h2>
+  <p class="code">background: color-mix(in srgb, #1a73e8 50%, transparent);</p>
+  <div class="overlay">
+    这是一个半透明的背景，使用 color-mix() 生成。
+  </div>
+</div>
+
+<div class="container">
+  <h2>2. 浅色背景标签</h2>
+  <p class="code">background: color-mix(in srgb, #1a73e8 20%, white);</p>
+  <div>
+    <span class="badge">CSS</span>
+    <span class="badge badge-green">JavaScript</span>
+    <span class="badge badge-red">TypeScript</span>
+    <span class="badge">HTML</span>
+    <span class="badge badge-green">Vue</span>
+  </div>
+</div>
+
+<div class="container">
+  <h2>3. 图片叠加层</h2>
+  <p class="code">background: color-mix(in srgb, #000 60%, transparent);</p>
+  <div class="overlay-demo">
+    <div class="overlay-content">
+      <h3 style="margin-top: 0;">图片标题</h3>
+      <p style="margin-bottom: 0;">这是叠加在图片上的半透明层</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>串行 vs 并发</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 8px; font-size: 15px; }
+button { padding: 6px 14px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 6px 2px 0; }
+button:hover:not(:disabled) { background: #1a73e8; color: #fff; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+pre { background: #262b33; color: #e0e0e0; padding: 12px; border-radius: 6px;
+      font-size: 12px; margin: 8px 0; overflow-x: auto; }
+.panel { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-top: 12px; }
+.panel h4 { margin: 0 0 8px; font-size: 14px; }
+.panel.bad h4 { color: #dc3545; }
+.panel.good h4 { color: #28a745; }
+.track { position: relative; height: 22px; background: #f4f4f4; border-radius: 4px;
+         margin: 5px 0; overflow: hidden; }
+.bar { position: absolute; top: 0; height: 100%; border-radius: 4px;
+       color: #fff; font-size: 11px; font-family: monospace;
+       display: flex; align-items: center; padding: 0 6px; box-sizing: border-box; }
+.bar.s1 { background: #1a73e8; }
+.bar.s2 { background: #6f42c1; }
+.bar.s3 { background: #0d904f; }
+.total { font-family: monospace; font-size: 14px; font-weight: bold; margin-top: 8px; }
+.total.bad { color: #dc3545; }
+.total.good { color: #28a745; }
+.axis { font-family: monospace; font-size: 11px; color: #999; display: flex;
+        justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<h3>三个各自耗时 800ms 的任务</h3>
+<pre>// ❌ 串行：写在一条线上，一个一个等
+const a = await task(800, 'A')
+const b = await task(800, 'B')
+const c = await task(800, 'C')
+
+// ✅ 并发：先全部发起，再一起等
+const [a, b, c] = await Promise.all([
+  task(800, 'A'), task(800, 'B'), task(800, 'C')
+])</pre>
+
+<button id="btnS" onclick="runSerial()">▶ 串行执行</button>
+<button id="btnP" onclick="runParallel()">▶ 并发执行</button>
+
+<div class="panel bad" id="panelS" style="display:none">
+  <h4>串行 —— 总耗时约 2400ms</h4>
+  <div class="axis"><span>0ms</span><span>1200ms</span><span>2400ms</span></div>
+  <div id="barsS"></div>
+  <div class="total bad" id="totalS"></div>
+</div>
+
+<div class="panel good" id="panelP" style="display:none">
+  <h4>并发 —— 总耗时约 800ms</h4>
+  <div class="axis"><span>0ms</span><span>400ms</span><span>800ms</span></div>
+  <div id="barsP"></div>
+  <div class="total good" id="totalP"></div>
+</div>
+
+<script>
+const DURATION = 800
+const NAMES = ['A', 'B', 'C']
+
+const delay = (ms) => new Promise(r => setTimeout(r, ms))
+
+/** 执行一个任务，记录它的起止时间（相对本次运行开始） */
+async function task(t0, name) {
+  const start = performance.now() - t0
+  await delay(DURATION)
+  const end = performance.now() - t0
+  return { name, start, end }
+}
+
+function draw(containerId, totalId, results, totalMs) {
+  const max = Math.max(totalMs, ...results.map(r => r.end))
+  document.getElementById(containerId).innerHTML = results.map((r, i) => {
+    const left = (r.start / max) * 100
+    const width = ((r.end - r.start) / max) * 100
+    return `<div class="track">
+      <div class="bar s${i + 1}" style="left:${left}%;width:${width}%">
+        任务 ${r.name}（${Math.round(r.end - r.start)}ms）
+      </div>
+    </div>`
+  }).join('')
+  document.getElementById(totalId).textContent =
+    `总耗时：${Math.round(totalMs)} ms`
+}
+
+function lock(v) {
+  document.getElementById('btnS').disabled = v
+  document.getElementById('btnP').disabled = v
+}
+
+async function runSerial() {
+  lock(true)
+  document.getElementById('panelS').style.display = 'block'
+  document.getElementById('panelP').style.display = 'none'
+
+  const t0 = performance.now()
+  const results = []
+  // 依次 await —— 这就是"串行"
+  for (const name of NAMES) {
+    results.push(await task(t0, name))
+  }
+  const total = performance.now() - t0
+
+  draw('barsS', 'totalS', results, total)
+  lock(false)
+}
+
+async function runParallel() {
+  lock(true)
+  document.getElementById('panelP').style.display = 'block'
+  document.getElementById('panelS').style.display = 'none'
+
+  const t0 = performance.now()
+  // 先同时发起（立刻拿到三个 pending 的 Promise），再一起等
+  const results = await Promise.all(NAMES.map(name => task(t0, name)))
+  const total = performance.now() - t0
+
+  draw('barsP', 'totalP', results.sort((a, b) => a.name.localeCompare(b.name)), total)
+  lock(false)
+}
+</script>
+
+</body>
+</html>

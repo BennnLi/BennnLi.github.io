@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>幂运算符的坑</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 8px; font-size: 15px; }
+section { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #eee; }
+section:last-child { border-bottom: 0; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+pre { background: #262b33; color: #e0e0e0; padding: 12px; border-radius: 6px;
+      font-size: 12px; margin: 8px 0; overflow-x: auto; }
+.out { font-family: monospace; font-size: 13px; background: #f8f9fa;
+       border-left: 3px solid #1a73e8; padding: 8px 12px; border-radius: 0 6px 6px 0;
+       margin-top: 8px; white-space: pre-wrap; }
+.warn { border-left-color: #dc3545; }
+</style>
+</head>
+<body>
+
+<section>
+  <h3>坑 1：<code>**</code> 是右结合，从右往左算</h3>
+  <pre>2 ** 3 ** 2
+// = 2 ** (3 ** 2) = 2 ** 9 = 512
+// 不是 (2 ** 3) ** 2 = 64</pre>
+  <button onclick="assoc()">运行对比</button>
+  <div class="out" id="out1">点按钮运行</div>
+</section>
+
+<section>
+  <h3>坑 2：左边不能直接跟一元运算符</h3>
+  <pre>-2 ** 2     // ❌ SyntaxError
+-(2 ** 2)   // ✅ -4
+(-2) ** 2   // ✅ 4</pre>
+  <div>
+    <button onclick="unary('-(2 ** 2)')">-(2 ** 2)</button>
+    <button onclick="unary('(-2) ** 2')">(-2) ** 2</button>
+    <button onclick="unary('-2 ** 2')">-2 ** 2（非法）</button>
+  </div>
+  <div class="out warn" id="out2">点按钮运行</div>
+</section>
+
+<section>
+  <h3>坑 3：<code>Math.pow(-2, 2)</code> 能写，但 <code>-2 ** 2</code> 不行</h3>
+  <button onclick="powDiff()">运行对比</button>
+  <div class="out" id="out3">点按钮运行</div>
+</section>
+
+<section>
+  <h3>复合赋值 <code>**=</code></h3>
+  <pre>let n = 2
+n **= 10      // n = 1024</pre>
+  <button onclick="assign()">运行演示</button>
+  <div class="out" id="out4">点按钮运行</div>
+</section>
+
+<script>
+function assoc() {
+  const right = 2 ** 3 ** 2
+  const left = (2 ** 3) ** 2
+  document.getElementById('out1').textContent =
+    `2 ** 3 ** 2    →  ${right}    （实际是 2 ** (3 ** 2) = 2 ** 9）\n` +
+    `(2 ** 3) ** 2  →  ${left}     （加括号才能左结合）\n` +
+    `两者相差 ${right / left} 倍，很容易写错`
+}
+
+function unary(expr) {
+  const out = document.getElementById('out2')
+  try {
+    const v = eval(expr)
+    out.textContent = `${expr}  →  ${v}   ✅ 合法`
+  } catch (e) {
+    out.textContent = `${expr}  →  ${e.name}: ${e.message}\n\n` +
+      `规范禁止这种歧义写法，必须加括号明确意图。`
+  }
+}
+
+function powDiff() {
+  document.getElementById('out3').textContent =
+    `Math.pow(-2, 2)  →  ${Math.pow(-2, 2)}   ✅ 能直接写\n` +
+    `(-2) ** 2        →  ${(-2) ** 2}   ✅ 幂运算符必须加括号\n` +
+    `-2 ** 2          →  SyntaxError   ❌ 直接报语法错误`
+}
+
+function assign() {
+  let n = 2
+  const steps = [`n = ${n}`]
+  n **= 10
+  steps.push(`n **= 10   →  n = ${n}`)
+  n **= 0.5
+  steps.push(`n **= 0.5  →  n = ${n}   （开平方）`)
+  document.getElementById('out4').textContent = steps.join('\n')
+}
+</script>
+
+</body>
+</html>

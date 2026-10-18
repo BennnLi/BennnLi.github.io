@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:nth-child(of S) 基础用法</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 传统写法 ========== */
+.traditional li:nth-child(2) {
+  background: #ffcdd2;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+/* ========== 新语法 ========== */
+.new-syntax li:nth-child(2 of .active) {
+  background: #c8e6c9;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+/* ========== 演示 ========== */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+li {
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 4px;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:nth-child(of S) 基础</strong> — 在特定类中选中第 N 个元素
+</div>
+
+<div class="container">
+  <h2>传统 :nth-child() — 选中第 2 个 li</h2>
+  <p class="code">li:nth-child(2) { background: #ffcdd2; }</p>
+  <ul class="traditional">
+    <li>第 1 个 li</li>
+    <li class="active">第 2 个 li（选中）</li>
+    <li>第 3 个 li</li>
+    <li class="active">第 4 个 li</li>
+  </ul>
+</div>
+
+<div class="container">
+  <h2>新语法 :nth-child(of S) — 选中第 2 个 .active 的 li</h2>
+  <p class="code">li:nth-child(2 of .active) { background: #c8e6c9; }</p>
+  <ul class="new-syntax">
+    <li>第 1 个 li</li>
+    <li class="active">第 2 个 li</li>
+    <li>第 3 个 li</li>
+    <li class="active">第 4 个 li（选中）</li>
+  </ul>
+</div>
+
+</body>
+</html>

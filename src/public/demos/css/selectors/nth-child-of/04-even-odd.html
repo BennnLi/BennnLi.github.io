@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:nth-child(of S) 奇偶选择</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 传统写法：所有奇数行 ========== */
+.traditional li:nth-child(odd) {
+  background: #ffcdd2;
+}
+
+/* ========== 新语法：只对 .visible 奇数行 ========== */
+.new-syntax li:nth-child(odd of .visible) {
+  background: #c8e6c9;
+}
+
+/* ========== 演示 ========== */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+li {
+  padding: 12px 16px;
+  margin: 4px 0;
+  border-radius: 4px;
+  background: #f8f9fa;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.hidden {
+  opacity: 0.5;
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:nth-child(of S) 奇偶选择</strong> — 在特定类中选中奇偶元素
+</div>
+
+<div class="container">
+  <h2>传统 :nth-child() — 所有奇数行变色</h2>
+  <p class="code">li:nth-child(odd) { background: #ffcdd2; }</p>
+  <ul class="traditional">
+    <li>项目 1（奇数 - 变色）</li>
+    <li>项目 2（偶数）</li>
+    <li>项目 3（奇数 - 变色）</li>
+    <li>项目 4（偶数）</li>
+    <li>项目 5（奇数 - 变色）</li>
+  </ul>
+</div>
+
+<div class="container">
+  <h2>新语法 :nth-child(of S) — 只对 .visible 奇数行变色</h2>
+  <p class="code">li:nth-child(odd of .visible) { background: #c8e6c9; }</p>
+  <ul class="new-syntax">
+    <li class="visible">项目 1（visible 奇数 - 变色）</li>
+    <li class="visible">项目 2（visible 偶数）</li>
+    <li class="hidden">项目 3（hidden - 跳过）</li>
+    <li class="visible">项目 4（visible 奇数 - 变色）</li>
+    <li class="visible">项目 5（visible 偶数）</li>
+  </ul>
+</div>
+
+</body>
+</html>

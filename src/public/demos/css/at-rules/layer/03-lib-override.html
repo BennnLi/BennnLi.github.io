@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@layer — 覆盖第三方库样式</title>
+<style>
+/* 声明层顺序：三方库在最底层，自己的样式更优先 */
+@layer lib, app;
+
+/* ---------- lib 层：模拟第三方组件库 ---------- */
+@layer lib {
+  .btn {                        /* 简单选择器 */
+    background: #1677ff;
+    color: #fff;
+    border: none;
+  }
+  .btn-primary {                /* 同样是简单选择器 */
+    background: #1677ff;
+  }
+  .btn-danger {
+    background: #ff4d4f;
+  }
+}
+
+/* ---------- app 层：自定义样式，轻松覆盖 ---------- */
+@layer app {
+  .btn-primary { background: #52c41a; }   /* 绿色覆盖蓝色 */
+  .btn-danger  { background: #faad14; }   /* 黄色覆盖红色 */
+}
+
+/* ========== 通用样式（不分层，仅布局） ========== */
+body {
+  font-family: sans-serif;
+  display: flex; gap: 12px;
+  justify-content: center; align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.btn {
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<button class="btn">默认按钮</button>
+<button class="btn btn-primary">Primary → 绿色</button>
+<button class="btn btn-danger">Danger → 黄色</button>
+
+</body>
+</html>

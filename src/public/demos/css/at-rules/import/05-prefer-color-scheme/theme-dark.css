@@ -1,0 +1,9 @@
+body {
+  background: #1a1a2e;
+  color: #e0e0e0;
+}
+.card {
+  background: #2a2a3e;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+h1 { color: #e0e0e0; }

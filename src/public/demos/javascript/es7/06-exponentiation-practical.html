@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>幂运算符实际运用</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 8px; font-size: 15px; }
+section { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+section:last-child { border-bottom: 0; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+input { padding: 6px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; width: 90px; }
+.out { font-family: monospace; font-size: 13px; background: #f8f9fa;
+       border-left: 3px solid #1a73e8; padding: 8px 12px; border-radius: 0 6px 6px 0;
+       margin-top: 8px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<section>
+  <h3>1. 几何公式 —— 更接近数学写法</h3>
+  <code>Math.PI * r ** 2</code>
+  <div style="margin-top:8px">
+    半径 r = <input id="r" type="number" value="5" step="0.5">
+    <button onclick="geo()">计算</button>
+  </div>
+  <div class="out" id="out1">输入半径后点计算</div>
+</section>
+
+<section>
+  <h3>2. 复利终值</h3>
+  <code>principal * (1 + rate) ** years</code>
+  <div style="margin-top:8px">
+    本金 <input id="p" type="number" value="10000" step="1000">
+    年利率 <input id="rate" type="number" value="0.05" step="0.01">
+    年数 <input id="y" type="number" value="10" step="1">
+    <button onclick="compound()">计算</button>
+  </div>
+  <div class="out" id="out2">填参数后点计算</div>
+</section>
+
+<section>
+  <h3>3. 单位换算 —— 1024 的幂</h3>
+  <code>kb / 1024 ** 2</code>
+  <div style="margin-top:8px">
+    <input id="kb" type="number" value="1048576" step="1024">
+    <span style="font-size:13px">KB</span>
+    <button onclick="convert()">换算</button>
+  </div>
+  <div class="out" id="out3">输入 KB 数后点换算</div>
+</section>
+
+<script>
+const fmt = (n, d = 2) => Number(n.toFixed(d)).toLocaleString('zh-CN')
+
+function geo() {
+  const r = Number(document.getElementById('r').value)
+  const area = Math.PI * r ** 2
+  const volume = (4 / 3) * Math.PI * r ** 3
+  document.getElementById('out1').textContent =
+    `r = ${r}\n` +
+    `圆面积   π * r ** 2        = ${fmt(area)}\n` +
+    `球体积   (4/3) * π * r ** 3 = ${fmt(volume)}`
+}
+
+function compound() {
+  const p = Number(document.getElementById('p').value)
+  const rate = Number(document.getElementById('rate').value)
+  const years = Number(document.getElementById('y').value)
+  const total = p * (1 + rate) ** years
+  document.getElementById('out2').textContent =
+    `本金 ${fmt(p, 0)} × (1 + ${rate}) ** ${years}\n` +
+    `终值 = ${fmt(total)}\n` +
+    `利息 = ${fmt(total - p)}`
+}
+
+function convert() {
+  const kb = Number(document.getElementById('kb').value)
+  document.getElementById('out3').textContent =
+    `${fmt(kb, 0)} KB\n` +
+    `= ${fmt(kb / 1024 ** 1, 4)} MB\n` +
+    `= ${fmt(kb / 1024 ** 2, 6)} GB\n` +
+    `= ${fmt(kb / 1024 ** 3, 8)} TB`
+}
+</script>
+
+</body>
+</html>

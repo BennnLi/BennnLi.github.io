@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>async/await 错误处理</title>
+<style>
+body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+h3 { margin: 0 0 8px; font-size: 15px; }
+section { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+section:last-child { border-bottom: 0; }
+button { padding: 6px 12px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8;
+         border-radius: 6px; cursor: pointer; font-size: 13px; margin: 2px 4px 2px 0; }
+button:hover { background: #1a73e8; color: #fff; }
+pre { background: #262b33; color: #e0e0e0; padding: 12px; border-radius: 6px;
+      font-size: 12px; margin: 8px 0; overflow-x: auto; }
+.out { font-family: monospace; font-size: 13px; background: #f8f9fa;
+       border-left: 3px solid #1a73e8; padding: 8px 12px; border-radius: 0 6px 6px 0;
+       margin-top: 8px; white-space: pre-wrap; }
+.bad { border-left-color: #dc3545; }
+.good { border-left-color: #28a745; }
+</style>
+</head>
+<body>
+
+<section>
+  <h3>1. try / catch 捕获 await 的失败</h3>
+  <pre>async function load() {
+  try {
+    await fail()            // rejected
+  } catch (e) {
+    return '降级值'          // ← 会被执行
+  } finally {
+    log('finally 总会执行')
+  }
+}</pre>
+  <button onclick="caught()">运行</button>
+  <div class="out good" id="out1">点按钮运行</div>
+</section>
+
+<section>
+  <h3>2. 不捕获 → 变成 unhandledrejection</h3>
+  <pre>window.addEventListener('unhandledrejection', e => {
+  log('未处理的拒绝：' + e.reason.message)
+})</pre>
+  <button onclick="uncaught()">运行（故意不捕获）</button>
+  <div class="out bad" id="out2">点按钮运行</div>
+</section>
+
+<section>
+  <h3>3. 同步抛错也能被同一个 catch 捕获</h3>
+  <pre>async function f() {
+  try {
+    throw new Error('同步抛错')
+    await something()       // 根本执行不到
+  } catch (e) { ... }
+}</pre>
+  <button onclick="syncThrow()">运行</button>
+  <div class="out" id="out3">点按钮运行</div>
+</section>
+
+<script>
+const fail = () => Promise.reject(new Error('接口 500'))
+const delay = (ms) => new Promise(r => setTimeout(r, ms))
+
+// 全局兜底监听
+window.addEventListener('unhandledrejection', (e) => {
+  document.getElementById('out2').textContent =
+    `⚠️ 捕获到 unhandledrejection\n` +
+    `  reason: ${e.reason.name}: ${e.reason.message}\n` +
+    `  → 如果代码里没人 .catch()，这种拒绝就会在这里被兜住\n` +
+    `  → 生产环境建议监听并上报，否则就是"静默失败"`
+  e.preventDefault()
+})
+
+async function load() {
+  const steps = []
+  try {
+    steps.push('try: 调用 await fail()')
+    await fail()
+    steps.push('这行不会执行')
+  } catch (e) {
+    steps.push(`catch: 捕获到 ${e.name}: ${e.message}`)
+    return steps.concat('返回降级值').join('\n')
+  } finally {
+    steps.push('finally: 一定会执行')
+  }
+}
+
+async function caught() {
+  const r = await load()
+  document.getElementById('out1').textContent = r
+}
+
+function uncaught() {
+  const out = document.getElementById('out2')
+  out.textContent = '已发起一个没人处理的 rejected Promise，等全局事件…'
+  // 故意不写 catch，也不 await
+  fail()
+}
+
+async function syncThrow() {
+  const steps = []
+  async function f() {
+    try {
+      throw new Error('同步抛错')
+      // eslint-disable-next-line no-unreachable
+      await delay(100)
+    } catch (e) {
+      steps.push(`catch: ${e.name}: ${e.message}`)
+      steps.push('（await 之后的代码根本执行不到）')
+    }
+  }
+  await f()
+  document.getElementById('out3').textContent = steps.join('\n')
+}
+</script>
+
+</body>
+</html>

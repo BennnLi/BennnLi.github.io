@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>:has() vs JavaScript 做法对比</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+h3 { margin: 0 0 12px; font-size: 16px; }
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 16px 0;
+}
+
+.col {
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.col.js {
+  background: #fff5f5;
+  border: 1px solid #f5c6cb;
+}
+
+.col.css {
+  background: #f8fff8;
+  border: 1px solid #c3e6cb;
+}
+
+.col h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: white;
+}
+
+.badge.js { background: #dc3545; }
+.badge.css { background: #28a745; }
+
+pre {
+  background: #262b33;
+  color: #e0e0e0;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 0;
+  font-family: Consolas, monospace;
+}
+
+/* ========== 演示区：两种方式效果一致 ========== */
+.demo-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 16px 0;
+}
+
+.demo-panel {
+  padding: 16px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+}
+
+.card {
+  padding: 14px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.card p { margin: 0; font-size: 14px; color: #666; }
+
+/* ========== CSS 方案：纯 :has() ========== */
+.css-way .card:has(img) {
+  border: 2px solid #28a745;
+  background: #f8fff8;
+}
+
+.css-way .card:has(img)::before {
+  content: '✓ 含图片（CSS 识别）';
+  display: block;
+  font-size: 11px;
+  color: #28a745;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+/* ========== JS 方案：靠 JS 加的类名 ========== */
+.js-way .card.has-image {
+  border: 2px solid #28a745;
+  background: #f8fff8;
+}
+
+.js-way .card.has-image::before {
+  content: '✓ 含图片（JS 识别）';
+  display: block;
+  font-size: 11px;
+  color: #28a745;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+/* ========== 动态添加演示 ========== */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+button {
+  padding: 8px 16px;
+  border: 1px solid #1a73e8;
+  background: white;
+  color: #1a73e8;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: #1a73e8;
+  color: white;
+}
+
+.mock-img {
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(135deg, #1a73e8, #8ab4f8);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #d4edda;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #155724;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>:has() vs JavaScript</strong> — 同样的效果，一行 CSS 对比一段 JS
+</div>
+
+<div class="container">
+  <h2>代码对比：给「含图片的卡片」加样式</h2>
+
+  <div class="cols">
+    <div class="col js">
+      <h3>JavaScript 方案 <span class="badge js">以前的写法</span></h3>
+      <pre>// 1. 遍历所有卡片
+document.querySelectorAll('.card').forEach(card =&gt; {
+  // 2. 检查是否含图片
+  if (card.querySelector('img')) {
+    // 3. 手动加类名
+    card.classList.add('has-image');
+  }
+});
+
+// 4. 还要监听 DOM 变化，
+//    否则动态插入的卡片不会被处理
+new MutationObserver(() =&gt; {
+  document.querySelectorAll('.card').forEach(card =&gt; {
+    card.classList.toggle(
+      'has-image',
+      !!card.querySelector('img')
+    );
+  });
+}).observe(document.body, {
+  childList: true, subtree: true
+});</pre>
+    </div>
+
+    <div class="col css">
+      <h3>CSS 方案 <span class="badge css">:has() 写法</span></h3>
+      <pre>/* 一行搞定，无需 JS */
+.card:has(img) {
+  border: 2px solid #28a745;
+  background: #f8fff8;
+}
+
+.card:has(img)::before {
+  content: '✓ 含图片';
+  color: #28a745;
+}
+
+/* 动态插入的元素自动生效
+   浏览器原生处理，无需监听 */</pre>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>优势：</strong>没有初始化的遍历开销、没有 MutationObserver、没有类名污染，浏览器原生引擎直接处理，动态 DOM 变更自动重算。
+  </div>
+</div>
+
+<div class="container">
+  <h2>实际效果对比</h2>
+
+  <div class="demo-area">
+    <div class="demo-panel css-way">
+      <h3>✅ :has() 方案</h3>
+      <div class="card">
+        <div class="mock-img"></div>
+        <p>这张卡片含图片</p>
+      </div>
+      <div class="card">
+        <p>这张卡片没有图片</p>
+      </div>
+    </div>
+
+    <div class="demo-panel js-way" id="jsPanel">
+      <h3>⚠️ JS 方案</h3>
+      <div class="card">
+        <div class="mock-img"></div>
+        <p>这张卡片含图片</p>
+      </div>
+      <div class="card">
+        <p>这张卡片没有图片</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="code">JS 方案需要在页面加载后遍历并加类名，下面是同一段初始化代码：</p>
+
+  <div class="toolbar">
+    <button onclick="addCard()">动态添加一张含图片的卡片</button>
+    <button onclick="resetCards()">重置</button>
+  </div>
+  <p style="font-size:13px;color:#666;">
+    点击「动态添加」，观察两种方案：<strong>CSS 方案的新卡片会自动套用样式</strong>；
+    JS 方案需要额外交代 MutationObserver 才能跟上（本页 JS 面板已实现，否则新卡片不会有绿框）。
+  </p>
+</div>
+
+<script>
+// ===== JS 方案：完全模拟"以前的做法" =====
+const jsPanel = document.getElementById('jsPanel');
+
+function markHasImage() {
+  jsPanel.querySelectorAll('.card').forEach(card => {
+    card.classList.toggle('has-image', !!card.querySelector('img, .mock-img'));
+  });
+}
+
+// 初始执行
+markHasImage();
+
+// 必须靠 MutationObserver 才能处理动态插入
+new MutationObserver(markHasImage).observe(jsPanel, {
+  childList: true,
+  subtree: true
+});
+
+// ===== 演示按钮 =====
+function addCard() {
+  // 两个面板同时加一张卡片（DOM 结构完全一样）
+  const html = '<div class="card"><div class="mock-img"></div><p>新添加的含图片卡片</p></div>';
+
+  document.querySelector('.css-way').insertAdjacentHTML('beforeend', html);
+  jsPanel.insertAdjacentHTML('beforeend', html);
+}
+
+function resetCards() {
+  const base = '<div class="card"><div class="mock-img"></div><p>这张卡片含图片</p></div>' +
+               '<div class="card"><p>这张卡片没有图片</p></div>';
+  document.querySelector('.css-way').innerHTML = base;
+  jsPanel.innerHTML = base;
+  markHasImage();
+}
+</script>
+
+</body>
+</html>

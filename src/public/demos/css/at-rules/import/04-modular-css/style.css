@@ -1,0 +1,6 @@
+/* 入口文件：按模块组织 */
+@import url('./reset.css');
+@import url('./variables.css');
+@import url('./header.css');
+@import url('./card.css');
+@import url('./footer.css');

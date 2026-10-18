@@ -1,0 +1,19 @@
+{
+  "name": "frontend-notes-site",
+  "private": true,
+  "type": "module",
+  "description": "CSS / JavaScript 笔记站：文档与示例直接在 src 中维护，脚本只生成导航与首页",
+  "scripts": {
+    "gen": "node scripts/gen-nav.ts",
+    "dev": "npm run gen && vitepress dev",
+    "build": "npm run gen && vitepress build",
+    "preview": "vitepress preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "vitepress": "^1.6.0",
+    "vue-tsc": "^2.2.0"
+  }
+}

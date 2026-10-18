@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>oklch() 交互状态</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 用 oklch() 生成交互状态颜色 ========== */
+.button {
+  --base: oklch(0.6 0.2 250);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  background: var(--base);
+}
+
+.button:hover {
+  /* 降低亮度 = 加深颜色 */
+  background: oklch(0.5 0.2 250);
+}
+
+.button:active {
+  /* 进一步降低亮度 */
+  background: oklch(0.4 0.2 250);
+}
+
+/* ========== 不同色相的按钮 ========== */
+.button-green {
+  --base: oklch(0.6 0.2 145);
+}
+
+.button-green:hover {
+  background: oklch(0.5 0.2 145);
+}
+
+.button-green:active {
+  background: oklch(0.4 0.2 145);
+}
+
+.button-red {
+  --base: oklch(0.6 0.2 25);
+}
+
+.button-red:hover {
+  background: oklch(0.5 0.2 25);
+}
+
+.button-red:active {
+  background: oklch(0.4 0.2 25);
+}
+
+/* ========== 演示 ========== */
+.buttons {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note {
+  background: #fff3cd;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  color: #856404;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>oklch() 交互状态</strong> — 用 oklch() 生成 hover/active 色
+</div>
+
+<div class="container">
+  <h2>按钮交互状态</h2>
+  <p class="code">background: oklch(0.6 0.2 250); hover: oklch(0.5 0.2 250); active: oklch(0.4 0.2 250);</p>
+  <div class="buttons">
+    <button class="button">蓝色按钮</button>
+    <button class="button button-green">绿色按钮</button>
+    <button class="button button-red">红色按钮</button>
+  </div>
+  <div class="note">
+    <strong>技巧：</strong>只需调整亮度（L）参数，就能生成一致的 hover/active 颜色，色相保持不变。
+  </div>
+</div>
+
+</body>
+</html>

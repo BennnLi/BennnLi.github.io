@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@layer — 嵌套层</title>
+<style>
+/* 外层定义 framework 内部的层顺序 */
+@layer framework {
+  @layer base, theme;
+}
+
+/* framework.base */
+@layer framework.base {
+  .card {
+    color: #333;
+    background: #eee;
+    border: 2px dashed #999;
+  }
+}
+
+/* framework.theme（在 framework 内部优先级更高） */
+@layer framework.theme {
+  .card {
+    color: #fff;
+    background: #1677ff;
+    border: 2px solid #1677ff;
+  }
+}
+
+body {
+  font-family: sans-serif;
+  display: flex; gap: 20px;
+  justify-content: center; align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.card {
+  width: 260px; padding: 24px;
+  border-radius: 12px; font-size: 16px;
+  text-align: center; font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  蓝色卡片 —— framework.theme 在嵌套层中优先级更高
+</div>
+
+</body>
+</html>

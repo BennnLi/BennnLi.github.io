@@ -1,0 +1,15 @@
+/* 所有尺寸公用的样式 */
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+  transition: background 0.3s;
+}
+.card {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 400px;
+  margin-top: 20px;
+  transition: border-color 0.3s;
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>oklch() 渐变</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  background: #e8f0fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1a73e8;
+}
+
+h2 { margin-top: 0; }
+
+/* ========== 渐变示例 ========== */
+.gradient-box {
+  height: 120px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.gradient-linear {
+  background: linear-gradient(
+    90deg,
+    oklch(0.7 0.2 250),
+    oklch(0.7 0.2 350)
+  );
+}
+
+.gradient-radial {
+  background: radial-gradient(
+    circle,
+    oklch(0.7 0.2 250),
+    oklch(0.7 0.2 350)
+  );
+}
+
+.gradient-conic {
+  background: conic-gradient(
+    oklch(0.7 0.2 0),
+    oklch(0.7 0.2 60),
+    oklch(0.7 0.2 120),
+    oklch(0.7 0.2 180),
+    oklch(0.7 0.2 240),
+    oklch(0.7 0.2 300),
+    oklch(0.7 0.2 360)
+  );
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+}
+
+/* ========== 渐变卡片 ========== */
+.gradient-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.gradient-card {
+  height: 150px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.gradient-card-1 {
+  background: linear-gradient(135deg, oklch(0.7 0.2 250), oklch(0.7 0.2 320));
+}
+
+.gradient-card-2 {
+  background: linear-gradient(135deg, oklch(0.7 0.2 145), oklch(0.7 0.2 200));
+}
+
+.gradient-card-3 {
+  background: linear-gradient(135deg, oklch(0.7 0.2 25), oklch(0.7 0.2 350));
+}
+
+.code {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="description">
+  <strong>oklch() 渐变</strong> — oklch() 在渐变中的应用
+</div>
+
+<div class="container">
+  <h2>1. 线性渐变</h2>
+  <p class="code">background: linear-gradient(90deg, oklch(0.7 0.2 250), oklch(0.7 0.2 350));</p>
+  <div class="gradient-box gradient-linear"></div>
+</div>
+
+<div class="container">
+  <h2>2. 径向渐变</h2>
+  <p class="code">background: radial-gradient(circle, oklch(0.7 0.2 250), oklch(0.7 0.2 350));</p>
+  <div class="gradient-box gradient-radial"></div>
+</div>
+
+<div class="container">
+  <h2>3. 锥形渐变 — 色环</h2>
+  <p class="code">background: conic-gradient(oklch(0.7 0.2 0), oklch(0.7 0.2 60), ...);</p>
+  <div style="display: flex; align-items: center; gap: 24px;">
+    <div class="gradient-box gradient-conic"></div>
+    <p>用 oklch() 生成的色环，颜色过渡更平滑、更符合人眼感知。</p>
+  </div>
+</div>
+
+<div class="container">
+  <h2>4. 渐变卡片</h2>
+  <div class="gradient-cards">
+    <div class="gradient-card gradient-card-1">蓝色渐变</div>
+    <div class="gradient-card gradient-card-2">绿色渐变</div>
+    <div class="gradient-card gradient-card-3">红色渐变</div>
+  </div>
+</div>
+
+</body>
+</html>

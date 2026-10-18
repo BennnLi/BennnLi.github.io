@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>@scope — :scope 伪类</title>
+<style>
+@scope (.card) {
+  /* :scope 指 .card 自身 */
+  :scope {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    background: #fff;
+    transition: box-shadow 0.2s;
+  }
+  :scope:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  /* 内部元素 */
+  h3 { color: #1677ff; margin: 0 0 8px; }
+  p  { color: #666; margin: 0; }
+}
+
+body {
+  font-family: sans-serif;
+  display: flex; gap: 20px;
+  padding: 40px;
+  background: #f5f5f5;
+}
+.card { width: 200px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h3>卡片一</h3>
+  <p>鼠标悬停看阴影效果</p>
+</div>
+
+<div class="card">
+  <h3>卡片二</h3>
+  <p>:scope 让 root 自身也可以被样式化</p>
+</div>
+
+<div class="banner">
+  <h3>不是卡片</h3>
+  <p>scope 外不受影响</p>
+</div>
+
+</body>
+</html>
