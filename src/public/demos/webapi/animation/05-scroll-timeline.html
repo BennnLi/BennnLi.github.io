@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 ScrollTimeline</title>
+<style>
+  :root {
+    --ink: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --brand: #2563eb;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 18px 20px 20px;
+    background: #f8fafc;
+    color: var(--ink);
+    font: 14px/1.6 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+
+  .desc {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .desc code {
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #eef2f7;
+    color: #334155;
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  .scroll-stage {
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fbfcfe;
+  }
+
+  .scroller {
+    height: 100px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+  }
+
+  .scroller:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .rows {
+    display: grid;
+    gap: 8px;
+  }
+
+  .rows span {
+    height: 6px;
+    border-radius: 3px;
+    background: #e2e8f0;
+  }
+
+  .rows span:nth-child(3n) { width: 72%; }
+  .rows span:nth-child(4n) { width: 88%; }
+  .rows span:nth-child(5n) { width: 58%; }
+
+  .progress {
+    position: relative;
+    height: 14px;
+    margin-top: 10px;
+  }
+
+  .progress::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--line);
+  }
+
+  .dot {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--brand);
+    translate: 0 -50%;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .chip {
+    margin-left: auto;
+    color: var(--muted);
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+</style>
+</head>
+<body>
+
+<p class="desc">第二个参数换成 <code>ScrollTimeline</code>，进度来自滚动距离，而不是时钟。</p>
+
+<div class="scroll-stage">
+  <div class="scroller" id="scroller" tabindex="0">
+    <div class="rows">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="progress"><span class="dot" id="dot"></span></div>
+</div>
+
+<div class="controls">
+  <span class="hint">↕ 在框里滚动</span>
+  <span class="chip" id="state"></span>
+</div>
+
+<script>
+  const scroller = document.querySelector('#scroller')
+  const dot = document.querySelector('#dot')
+  const chip = document.querySelector('#state')
+
+  const readProgress = () => {
+    const max = scroller.scrollHeight - scroller.clientHeight
+    return max > 0 ? scroller.scrollTop / max : 0
+  }
+
+  if ('ScrollTimeline' in window) {
+    const effect = new KeyframeEffect(
+      dot,
+      [{ left: '0px' }, { left: 'calc(100% - 12px)' }],
+      { fill: 'both' },
+    )
+
+    const animation = new Animation(effect, new ScrollTimeline({ source: scroller }))
+    animation.play()
+
+    const render = () => {
+      chip.textContent = '滚动进度 ' + Math.round(readProgress() * 100) + '%'
+    }
+    scroller.addEventListener('scroll', render, { passive: true })
+    render()
+  } else {
+    chip.textContent = '当前浏览器不支持 ScrollTimeline'
+  }
+</script>
+
+</body>
+</html>

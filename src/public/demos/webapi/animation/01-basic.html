@@ -2,102 +2,146 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>animate 基础与控制</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01 基础用法</title>
 <style>
-body { font-family: system-ui, sans-serif; margin: 0; padding: 24px; background: #f5f5f7; color: #1f2937; }
-.description { background: #e8f0fe; color: #1a56db; padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-bottom: 16px; }
-.description code { font-family: ui-monospace, monospace; }
-.card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgb(0 0 0 / 8%); }
-.track { position: relative; height: 88px; border-radius: 10px; background: repeating-linear-gradient(90deg, #f8fafc 0 40px, #eef2f7 40px 80px); overflow: hidden; }
-.box { position: absolute; top: 14px; left: 8px; width: 60px; height: 60px; border-radius: 10px; background: #1a73e8; }
-.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-button { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; }
-button:hover { background: #f3f4f6; }
-button.primary { background: #1a73e8; border-color: #1a73e8; color: #fff; }
-button.primary:hover { background: #1663c7; }
-.scrub { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 13px; color: #4b5563; }
-input[type="range"] { flex: 1; accent-color: #1a73e8; }
-.state { margin: 10px 0 0; font-family: ui-monospace, monospace; font-size: 12px; color: #6b7280; }
+  :root {
+    --ink: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --brand: #2563eb;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 18px 20px 20px;
+    background: #f8fafc;
+    color: var(--ink);
+    font: 14px/1.6 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+
+  .desc {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .desc code {
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #eef2f7;
+    color: #334155;
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  .stage {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 150px;
+    padding-bottom: 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background-color: #fbfcfe;
+    background-image: radial-gradient(#dfe5ee 1px, transparent 1px);
+    background-size: 16px 16px;
+    overflow: hidden;
+  }
+
+  .box {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--brand);
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  button {
+    padding: 7px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 12.5px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+
+  button:hover { background: #f1f5f9; border-color: #cbd5e1; }
+
+  button:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  button.primary {
+    border-color: var(--brand);
+    background: var(--brand);
+    color: #fff;
+  }
+
+  button.primary:hover { background: #1d4ed8; }
+
+  .chip {
+    margin-left: auto;
+    color: var(--muted);
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
 </style>
 </head>
 <body>
 
-<div class="description">
-  <code>box.animate(keyframes, options)</code> 创建动画，返回的 Animation 对象可以控制播放
+<p class="desc"><code>box.animate(keyframes, options)</code> 返回 Animation 对象，播放、暂停、重置都作用在它身上。</p>
+
+<div class="stage">
+  <div class="box" id="box"></div>
 </div>
 
-<div class="card">
-  <div class="track">
-    <div class="box"></div>
-  </div>
-
-  <div class="controls">
-    <button class="primary" id="play">播放</button>
-    <button id="pause">暂停</button>
-    <button id="reverse">反向</button>
-    <button id="reset">重置</button>
-  </div>
-
-  <label class="scrub">
-    <span>进度</span>
-    <input type="range" id="scrub" min="0" max="2000" value="0">
-    <span id="time">0ms</span>
-  </label>
-
-  <p class="state">playState：running</p>
+<div class="controls">
+  <button class="primary" data-act="play">播放</button>
+  <button data-act="pause">暂停</button>
+  <button data-act="reset">重置</button>
+  <span class="chip" id="state"></span>
 </div>
 
 <script>
-const box = document.querySelector('.box')
-const state = document.querySelector('.state')
-const scrub = document.querySelector('#scrub')
-const time = document.querySelector('#time')
+  const box = document.querySelector('#box')
+  const chip = document.querySelector('#state')
 
-const DURATION = 2000
+  const animation = box.animate(
+    {
+      transform: ['translateY(0)', 'translateY(-64px)'],
+      borderRadius: ['14px', '50%'],
+      background: ['#2563eb', '#f59e0b'],
+    },
+    { duration: 900, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' },
+  )
 
-const animation = box.animate(
-  [
-    { transform: 'translateX(0) rotate(0deg)', backgroundColor: '#1a73e8' },
-    { transform: 'translateX(300px) rotate(180deg)', backgroundColor: '#dc3545' },
-  ],
-  {
-    duration: DURATION,
-    easing: 'ease-in-out',
-    iterations: Infinity,
-    direction: 'alternate',
-    fill: 'both',
-  },
-)
+  const actions = {
+    play: () => animation.play(),
+    pause: () => animation.pause(),
+    reset: () => { animation.cancel(); animation.play() },
+  }
 
-document.querySelector('#play').addEventListener('click', () => animation.play())
-document.querySelector('#pause').addEventListener('click', () => animation.pause())
-document.querySelector('#reverse').addEventListener('click', () => animation.reverse())
-document.querySelector('#reset').addEventListener('click', () => {
-  animation.cancel()
-  animation.play()
-})
+  document.querySelector('.controls').addEventListener('click', (event) => {
+    const act = event.target.dataset.act
+    if (!actions[act]) return
+    actions[act]()
+    chip.textContent = 'playState: ' + animation.playState
+  })
 
-let seeking = false
-scrub.addEventListener('pointerdown', () => {
-  seeking = true
-})
-scrub.addEventListener('pointerup', () => {
-  seeking = false
-})
-scrub.addEventListener('input', () => {
-  animation.pause()
-  animation.currentTime = Number(scrub.value)
-})
-
-function tick() {
-  const current = animation.currentTime ?? 0
-  const loopTime = current % DURATION
-  state.textContent = `playState：${animation.playState}　currentTime：${Math.round(current)}ms`
-  time.textContent = `${Math.round(loopTime)}ms`
-  if (!seeking) scrub.value = String(loopTime)
-  requestAnimationFrame(tick)
-}
-requestAnimationFrame(tick)
+  chip.textContent = 'playState: ' + animation.playState
 </script>
 
 </body>

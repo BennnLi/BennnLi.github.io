@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 KeyframeEffect</title>
+<style>
+  :root {
+    --ink: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --brand: #2563eb;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 18px 20px 20px;
+    background: #f8fafc;
+    color: var(--ink);
+    font: 14px/1.6 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+
+  .desc {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .desc code {
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #eef2f7;
+    color: #334155;
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  .stage {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(40px, 18%, 96px);
+    height: 170px;
+    padding-bottom: 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background-color: #fbfcfe;
+    background-image: radial-gradient(#dfe5ee 1px, transparent 1px);
+    background-size: 16px 16px;
+    overflow: hidden;
+  }
+
+  .slot {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+  }
+
+  .box {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--brand);
+  }
+
+  .tag {
+    color: var(--muted);
+    font: 10.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  button {
+    padding: 7px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 12.5px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+
+  button:hover { background: #f1f5f9; border-color: #cbd5e1; }
+
+  button:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  button.primary {
+    border-color: var(--brand);
+    background: var(--brand);
+    color: #fff;
+  }
+
+  button.primary:hover { background: #1d4ed8; }
+
+  .chip {
+    margin-left: auto;
+    color: var(--muted);
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+</style>
+</head>
+<body>
+
+<p class="desc">效果只描述动什么，Animation 负责播；改 <code>effect.target</code>，动画就搬到另一个元素上。</p>
+
+<div class="stage">
+  <div class="slot">
+    <div class="box" id="box-a"></div>
+    <span class="tag">A</span>
+  </div>
+  <div class="slot">
+    <div class="box" id="box-b"></div>
+    <span class="tag">B</span>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="primary" data-act="play">播放</button>
+  <button data-act="pause">暂停</button>
+  <button data-act="swap">切换目标</button>
+  <span class="chip" id="state"></span>
+</div>
+
+<script>
+  const boxA = document.querySelector('#box-a')
+  const boxB = document.querySelector('#box-b')
+  const chip = document.querySelector('#state')
+
+  const keyframes = {
+    transform: ['translateY(0)', 'translateY(-64px)'],
+    borderRadius: ['14px', '50%'],
+    background: ['#2563eb', '#f59e0b'],
+  }
+
+  const effect = new KeyframeEffect(boxA, keyframes, {
+    duration: 900,
+    iterations: Infinity,
+    direction: 'alternate',
+    easing: 'ease-in-out',
+  })
+
+  const animation = new Animation(effect)
+  animation.play()
+
+  let onA = true
+  const show = () => {
+    chip.textContent = '目标 ' + (onA ? 'A' : 'B') + ' · ' + animation.playState
+  }
+
+  document.querySelector('.controls').addEventListener('click', (event) => {
+    const act = event.target.dataset.act
+    if (act === 'swap') {
+      onA = !onA
+      effect.target = onA ? boxA : boxB
+    } else if (act === 'play' || act === 'pause') {
+      animation[act]()
+    } else {
+      return
+    }
+    show()
+  })
+
+  show()
+</script>
+
+</body>
+</html>

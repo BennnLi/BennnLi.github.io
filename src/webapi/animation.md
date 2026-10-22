@@ -434,6 +434,17 @@ if (typeof Animation.prototype.commitStyles === 'function') {
 
 ## 在线示例
 
-<Demo src="/demos/webapi/animation/01-basic.html" title="基础用法 — animate 创建动画并控制播放" height="360px" />
+六个示例按顺序看：先拿到 Animation 对象，再处理结束状态；然后把效果对象拆出来、换关键帧，最后换时间轴和手动改时间。
 
-<Demo src="/demos/webapi/animation/02-fill-modes.html" title="fill 模式 — none、backwards、forwards 的差别" height="440px" />
+<Demo src="/demos/webapi/animation/01-basic.html" title="01 基础用法 — animate() 与播放控制" height="300px" />
+
+<Demo src="/demos/webapi/animation/02-fill-finished.html" title="02 fill 与 finished — 播完停在哪、怎么知道结束" height="290px" />
+
+<Demo src="/demos/webapi/animation/03-keyframe-effect.html" title="03 KeyframeEffect — 效果与播放分离，可以换目标" height="320px" />
+
+<Demo src="/demos/webapi/animation/04-set-keyframes.html" title="04 setKeyframes — 换一组动作，动画不重播" height="300px" />
+
+<Demo src="/demos/webapi/animation/05-scroll-timeline.html" title="05 时间轴 — ScrollTimeline 让滚动驱动进度" height="280px" />
+
+<Demo src="/demos/webapi/animation/06-current-time.html" title="06 currentTime — 手动拖到任意一帧" height="260px" />
+

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>06 currentTime</title>
+<style>
+  :root {
+    --ink: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --brand: #2563eb;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 18px 20px 20px;
+    background: #f8fafc;
+    color: var(--ink);
+    font: 14px/1.6 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+
+  .desc {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .desc code {
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #eef2f7;
+    color: #334155;
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  .stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 130px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background-color: #fbfcfe;
+    background-image: radial-gradient(#dfe5ee 1px, transparent 1px);
+    background-size: 16px 16px;
+    overflow: hidden;
+  }
+
+  .box {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--brand);
+  }
+
+  .box::after {
+    content: "";
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: .9;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .range {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .range input { flex: 1; accent-color: var(--brand); }
+
+  .range output {
+    min-width: 52px;
+    text-align: right;
+    color: var(--ink);
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+</style>
+</head>
+<body>
+
+<p class="desc">暂停之后 <code>currentTime</code> 就是进度，改这个数字，动画立刻跳到那一帧。</p>
+
+<div class="stage">
+  <div class="box" id="box"></div>
+</div>
+
+<div class="controls">
+  <label class="range">
+    <span>时间</span>
+    <input id="time" type="range" min="0" max="1000" step="10" value="0">
+    <output id="time-out">0ms</output>
+  </label>
+</div>
+
+<script>
+  const box = document.querySelector('#box')
+  const slider = document.querySelector('#time')
+  const out = document.querySelector('#time-out')
+
+  const animation = box.animate(
+    [
+      { transform: 'translateX(-90px) rotate(0deg)' },
+      { transform: 'translateX(90px) rotate(180deg)' },
+    ],
+    { duration: 1000, fill: 'both' },
+  )
+
+  animation.pause()
+
+  slider.addEventListener('input', () => {
+    animation.currentTime = Number(slider.value)
+    out.textContent = slider.value + 'ms'
+  })
+</script>
+
+</body>
+</html>
