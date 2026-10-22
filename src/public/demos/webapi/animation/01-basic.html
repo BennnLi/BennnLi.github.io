@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>animate 基础与控制</title>
+<style>
+body { font-family: system-ui, sans-serif; margin: 0; padding: 24px; background: #f5f5f7; color: #1f2937; }
+.description { background: #e8f0fe; color: #1a56db; padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-bottom: 16px; }
+.description code { font-family: ui-monospace, monospace; }
+.card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgb(0 0 0 / 8%); }
+.track { position: relative; height: 88px; border-radius: 10px; background: repeating-linear-gradient(90deg, #f8fafc 0 40px, #eef2f7 40px 80px); overflow: hidden; }
+.box { position: absolute; top: 14px; left: 8px; width: 60px; height: 60px; border-radius: 10px; background: #1a73e8; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+button { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; }
+button:hover { background: #f3f4f6; }
+button.primary { background: #1a73e8; border-color: #1a73e8; color: #fff; }
+button.primary:hover { background: #1663c7; }
+.scrub { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 13px; color: #4b5563; }
+input[type="range"] { flex: 1; accent-color: #1a73e8; }
+.state { margin: 10px 0 0; font-family: ui-monospace, monospace; font-size: 12px; color: #6b7280; }
+</style>
+</head>
+<body>
+
+<div class="description">
+  <code>box.animate(keyframes, options)</code> 创建动画，返回的 Animation 对象可以控制播放
+</div>
+
+<div class="card">
+  <div class="track">
+    <div class="box"></div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="play">播放</button>
+    <button id="pause">暂停</button>
+    <button id="reverse">反向</button>
+    <button id="reset">重置</button>
+  </div>
+
+  <label class="scrub">
+    <span>进度</span>
+    <input type="range" id="scrub" min="0" max="2000" value="0">
+    <span id="time">0ms</span>
+  </label>
+
+  <p class="state">playState：running</p>
+</div>
+
+<script>
+const box = document.querySelector('.box')
+const state = document.querySelector('.state')
+const scrub = document.querySelector('#scrub')
+const time = document.querySelector('#time')
+
+const DURATION = 2000
+
+const animation = box.animate(
+  [
+    { transform: 'translateX(0) rotate(0deg)', backgroundColor: '#1a73e8' },
+    { transform: 'translateX(300px) rotate(180deg)', backgroundColor: '#dc3545' },
+  ],
+  {
+    duration: DURATION,
+    easing: 'ease-in-out',
+    iterations: Infinity,
+    direction: 'alternate',
+    fill: 'both',
+  },
+)
+
+document.querySelector('#play').addEventListener('click', () => animation.play())
+document.querySelector('#pause').addEventListener('click', () => animation.pause())
+document.querySelector('#reverse').addEventListener('click', () => animation.reverse())
+document.querySelector('#reset').addEventListener('click', () => {
+  animation.cancel()
+  animation.play()
+})
+
+let seeking = false
+scrub.addEventListener('pointerdown', () => {
+  seeking = true
+})
+scrub.addEventListener('pointerup', () => {
+  seeking = false
+})
+scrub.addEventListener('input', () => {
+  animation.pause()
+  animation.currentTime = Number(scrub.value)
+})
+
+function tick() {
+  const current = animation.currentTime ?? 0
+  const loopTime = current % DURATION
+  state.textContent = `playState：${animation.playState}　currentTime：${Math.round(current)}ms`
+  time.textContent = `${Math.round(loopTime)}ms`
+  if (!seeking) scrub.value = String(loopTime)
+  requestAnimationFrame(tick)
+}
+requestAnimationFrame(tick)
+</script>
+
+</body>
+</html>

@@ -34,6 +34,7 @@ const SKIP_DIRS = new Set(['public', 'node_modules', '.vitepress', 'assets'])
 const GROUP_LABELS: Readonly<Record<string, string>> = {
   css: 'CSS',
   javascript: 'JavaScript',
+  webapi: 'Web API',
   'css/at-rules': 'At-Rules 条件规则与作用域',
   'css/selectors': '选择器增强',
   'css/colors': '颜色与主题',
@@ -54,8 +55,12 @@ const CHILD_ORDER: Readonly<Record<string, readonly string[]>> = {
 // ── 小工具 ─────────────────────────────────────────
 const natSort = (a: string, b: string): number => a.localeCompare(b, 'en', { numeric: true })
 
-/** URL 片段：小写化，如 'CSS' → 'css' */
-const urlSegment = (name: string): string => name.toLowerCase()
+/**
+ * URL 片段：直接取目录名，保留大小写。
+ * 必须与 VitePress 由文件路径推导出的路由一致，否则链接在大小写敏感的
+ * 静态托管（Linux）上会 404。
+ */
+const urlSegment = (name: string): string => name
 
 /** 目录名兜底标题：'some-thing' → 'Some Thing' */
 const prettify = (name: string): string =>
@@ -95,10 +100,17 @@ function extractTitle(text: string, fallback: string): string {
 
 /**
  * 统计页面里真正生效的 <Demo ...> 数量。
- * 先剔除 HTML 注释块（<!-- ... -->），否则被注释掉的示例也会被算进去。
+ * 先剔除 HTML 注释块与代码片段（围栏代码、行内代码），
+ * 否则「示例写法」也会被算进 demo 数。
  */
 const countDemos = (text: string): number =>
-  (text.replace(/<!--[\s\S]*?-->/g, '').match(/<Demo[\s/>]/g) ?? []).length
+  (
+    text
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/^```[\s\S]*?^```/gm, '')
+      .replace(/`[^`\n]*`/g, '')
+      .match(/<Demo[\s/>]/g) ?? []
+  ).length
 
 // ── 目录扫描 ───────────────────────────────────────
 /** 目录下的 .md 文件名（自然排序） */
@@ -232,15 +244,23 @@ const yaml = (value: string): string => JSON.stringify(value)
 /** 首页 features 里的一句话描述 */
 function summarize(result: GroupResult): string {
   const { dirs, files, pages, hasLanding, demos } = result.stats
+  const demoPart = demos > 0 ? ` · ${demos} 个在线 demo` : ''
   if (dirs > 0) {
     const docCount = hasLanding ? pages - 1 : pages
-    return `${dirs} 个分类 · ${docCount} 篇文档 · ${demos} 个在线 demo`
+    return `${dirs} 个分类 · ${docCount} 篇文档${demoPart}`
+  }
+  // 目前只有落地页（如刚建立的大类）
+  if (files === 0) {
+    return `总览页 · ${pages} 篇文档${demoPart}`
   }
   // 小节型（如 JavaScript）：排除落地页，用首尾小节表示范围
-  const sections = result.nodes.filter((n) => n.link !== `/${result.slug}`)
-  const labels = sections.map((n) => n.text)
-  const demoPart = demos > 0 ? ` · ${demos} 个在线 demo` : ''
-  return `${labels[0] ?? ''} – ${labels.at(-1) ?? ''} · 共 ${files} 个小节${demoPart}`
+  const labels = result.nodes
+    .filter((n) => n.link !== `/${result.slug}`)
+    .map((n) => n.text)
+  if (labels.length < 2) {
+    return `${labels[0] ?? ''} · ${files} 篇文档${demoPart}`
+  }
+  return `${labels[0]} – ${labels.at(-1)} · 共 ${files} 个小节${demoPart}`
 }
 
 function writeSidebar(results: readonly GroupResult[]): void {
@@ -289,7 +309,7 @@ layout: home
 
 hero:
   name: 前端笔记
-  text: CSS / JavaScript 特性整理
+  text: CSS / JavaScript / Web API 特性整理
   tagline: ${yaml(`${totalPages} 篇文档 · ${totalDemos} 个在线 demo · 全站本地搜索`)}
   actions:
     - theme: brand

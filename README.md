@@ -1,6 +1,6 @@
 # 前端笔记站（VitePress + TypeScript）
 
-CSS / JavaScript 笔记站：**文档与示例直接在 `src/` 中维护**，脚本只负责生成导航与首页。
+CSS / JavaScript / Web API 笔记站：**文档与示例直接在 `src/` 中维护**，脚本只负责生成导航与首页。
 
 ## 快速开始
 
@@ -43,6 +43,10 @@ site/src/
 │   ├── es7.md
 │   └── ... es17.md
 │
+├── webapi/                       ← 大类
+│   ├── index.md                  → /webapi
+│   └── animation.md              → /webapi/animation
+│
 └── public/
     └── demos/                    ← 示例 HTML 放这里
         ├── css/at-rules/layer/01-basic-layer.html
@@ -62,6 +66,7 @@ site/src/
 
 - **条目文字**：`<markdown 首个 # 标题>`（可用 frontmatter 的 `title` 覆盖）
 - **分组文字**：取自 `scripts/gen-nav.ts` 的 `GROUP_LABELS`，未配置则用目录名
+- **URL**：由目录名逐段拼接（如 `src/webapi/index.md` → `/webapi`），目录名统一用小写
 - **排序**：自然排序；可用 `CHILD_ORDER` 显式指定（CSS 分类已配）
 
 ### 加一篇文档
@@ -123,7 +128,7 @@ site/
 │           └── Demo.vue      # <Demo> 组件（lang="ts"）
 ├── src/                      # ★ 文档源码（手工维护）
 │   ├── index.md              # ⚙️ 生成
-│   ├── css/  javascript/
+│   ├── css/  javascript/  webapi/
 │   └── public/demos/
 └── sidebar.gen.ts            # ⚙️ 生成
 ```
@@ -151,7 +156,7 @@ import type { SidebarNode } from './types.ts'
 ## 已启用能力
 
 - ✅ **全文本地搜索** —— 纯前端 minisearch 索引，无需服务端
-- ✅ **示例内嵌** —— 77 个 demo 以 iframe 嵌入，可「新窗口打开」
+- ✅ **示例内嵌** —— 85 个 demo 以 iframe 嵌入，可「新窗口打开」
 - ✅ **自动三级侧边栏** —— 目录结构驱动
 - ✅ **自动本页目录**
 - ✅ **深色模式**

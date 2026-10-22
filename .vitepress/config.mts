@@ -4,7 +4,7 @@ import sidebar from '../sidebar.gen'
 export default defineConfig({
   lang: 'zh-CN',
   title: '前端笔记',
-  description: 'CSS / JavaScript 特性整理：文档 + 可运行示例',
+  description: 'CSS / JavaScript / Web API 特性整理：文档 + 可运行示例',
   srcDir: 'src',
   cleanUrls: true,
   lastUpdated: true,
@@ -19,6 +19,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: 'CSS', link: '/css' },
       { text: 'JavaScript', link: '/javascript' },
+      { text: 'Web API', link: '/webapi' },
     ],
 
     sidebar,
