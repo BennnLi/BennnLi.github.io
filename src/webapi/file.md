@@ -676,3 +676,19 @@ async function listDir(dirHandle, path = '') {
 
 await listDir(dirHandle)
 ````
+
+---
+
+## 在线示例
+
+<Demo src="/demos/webapi/file/01-basic-input.html" title="选择文件查看信息" height="340px" />
+
+<Demo src="/demos/webapi/file/02-read-text.html" title="读取文本内容" height="440px" />
+
+<Demo src="/demos/webapi/file/03-image-preview.html" title="图片预览" height="420px" />
+
+<Demo src="/demos/webapi/file/04-drag-drop.html" title="拖拽上传 + PNG 校验" height="380px" />
+
+<Demo src="/demos/webapi/file/05-save-file.html" title="另存为文件" height="380px" />
+
+<Demo src="/demos/webapi/file/06-directory-list.html" title="递归列出目录树" height="400px" />
