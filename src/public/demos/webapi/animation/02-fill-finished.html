@@ -158,6 +158,7 @@
   )
 
   const watch = () => {
+    // finished 是一个等待 animation 结束的 promise
     animation.finished.then(() => {
       chip.textContent = '已结束'
     }).catch(() => {})

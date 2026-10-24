@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 保存文件</title>
+<style>
+  :root {
+    --ink: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --brand: #2563eb;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 18px 20px 20px;
+    background: #f8fafc;
+    color: var(--ink);
+    font: 14px/1.6 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+
+  .desc {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .desc code {
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #eef2f7;
+    color: #334155;
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  .stage {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background-color: #fbfcfe;
+    background-image: radial-gradient(#dfe5ee 1px, transparent 1px);
+    background-size: 16px 16px;
+    overflow: hidden;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: 12.5px/1.6 ui-monospace, "Cascadia Code", Consolas, monospace;
+    resize: vertical;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--brand);
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  button {
+    padding: 7px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 12.5px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+
+  button:hover { background: #f1f5f9; border-color: #cbd5e1; }
+  button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  button.primary { border-color: var(--brand); background: var(--brand); color: #fff; }
+  button.primary:hover { background: #1d4ed8; }
+
+  .chip {
+    margin-left: auto;
+    color: var(--muted);
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+</style>
+</head>
+<body>
+
+<p class="desc">在输入框里写点内容，弹"另存为"对话框把内容存成文件。</p>
+
+<div class="stage">
+  <textarea id="content" placeholder="写点什么...">这是文件内容</textarea>
+</div>
+
+<div class="controls">
+  <button class="primary" id="save">另存为...</button>
+  <span class="chip" id="state"></span>
+</div>
+
+<script>
+  const chip = document.querySelector('#state')
+  const content = document.querySelector('#content')
+
+  async function download(content, filename) {
+    const blob = new Blob([content], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  document.querySelector('#save').addEventListener('click', async () => {
+    const text = content.value
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: 'notes.txt',
+        types: [
+          { description: '文本文件', accept: { 'text/plain': ['.txt'] } },
+          { description: 'JSON', accept: { 'application/json': ['.json'] } },
+        ],
+      })
+      const writable = await handle.createWritable()
+      await writable.write(text)
+      await writable.close()
+      chip.textContent = '已保存: ' + handle.name
+    } catch {
+      // 浏览器不支持 showSaveFilePicker 时降级
+      download(text, 'notes.txt')
+      chip.textContent = '已下载: notes.txt'
+    }
+  })
+</script>
+
+</body>
+</html>

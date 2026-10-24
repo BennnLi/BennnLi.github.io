@@ -164,6 +164,7 @@
     const act = event.target.dataset.act
     if (act === 'swap') {
       onA = !onA
+      // 将 effect 对象挂载到 boxB 上播放
       effect.target = onA ? boxA : boxB
     } else if (act === 'play' || act === 'pause') {
       animation[act]()

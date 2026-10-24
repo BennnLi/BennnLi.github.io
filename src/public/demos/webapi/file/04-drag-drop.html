@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 拖拽上传</title>
+<style>
+  :root {
+    --ink: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --brand: #2563eb;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 18px 20px 20px;
+    background: #f8fafc;
+    color: var(--ink);
+    font: 14px/1.6 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+
+  .desc {
+    margin: 0 0 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .desc code {
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #eef2f7;
+    color: #334155;
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  .stage {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background-color: #fbfcfe;
+    background-image: radial-gradient(#dfe5ee 1px, transparent 1px);
+    background-size: 16px 16px;
+    overflow: hidden;
+  }
+
+  .drop-zone {
+    padding: 24px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    transition: border-color .15s, background .15s;
+  }
+
+  .drop-zone.over {
+    border-color: var(--brand);
+    background: #eff6ff;
+  }
+
+  .file-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 18px -14px rgb(15 23 42 / 35%);
+    margin-bottom: 8px;
+  }
+
+  .file-icon {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #eff6ff;
+    color: var(--brand);
+    font: 600 11px ui-monospace, monospace;
+  }
+
+  .file-info { flex: 1; min-width: 0; }
+  .file-name { font-size: 12.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-meta { font: 11px ui-monospace, "Cascadia Code", Consolas, monospace; color: var(--muted); }
+
+  .result {
+    margin-top: 10px;
+    font: 12px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  .result.ok { color: #16a34a; }
+  .result.err { color: #dc2626; }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .chip {
+    margin-left: auto;
+    color: var(--muted);
+    font: 11.5px ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+</style>
+</head>
+<body>
+
+<p class="desc">把 PNG 图片拖进虚线框，校验通过则显示文件信息。</p>
+
+<div class="stage">
+  <div class="drop-zone" id="drop-zone">把 PNG 图片拖到这里</div>
+  <div class="result" id="result"></div>
+</div>
+
+<div class="controls">
+  <span class="chip" id="state"></span>
+</div>
+
+<script>
+  const zone = document.querySelector('#drop-zone')
+  const result = document.querySelector('#result')
+  const chip = document.querySelector('#state')
+
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault()
+    zone.classList.add('over')
+  })
+
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('over')
+  })
+
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault()
+    zone.classList.remove('over')
+
+    const file = e.dataTransfer.files[0]
+    if (!file) return
+
+    if (file.type === 'image/png') {
+      // 校验通过，显示文件信息
+      const ext = file.name.split('.').pop() || '?'
+      zone.innerHTML = `
+        <div class="file-card">
+          <div class="file-icon">${ext}</div>
+          <div class="file-info">
+            <div class="file-name">${file.name}</div>
+            <div class="file-meta">${(file.size / 1024).toFixed(1)} KB</div>
+          </div>
+        </div>
+      `
+      result.textContent = '已获取：' + file.name
+      result.className = 'result ok'
+      chip.textContent = 'PNG ✓'
+      console.log(file)
+    } else {
+      result.textContent = '文件不是png格式!'
+      result.className = 'result err'
+      chip.textContent = '非 PNG ✗'
+    }
+  })
+</script>
+
+</body>
+</html>

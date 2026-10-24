@@ -52,7 +52,7 @@ new KeyframeEffect(box, [{ opacity: 0 }, { opacity: 1 }], 300)
 
 | 操作 | 写法 | 说明 |
 |------|------|------|
-| 换元素 | `effect.target = anotherBox` | 立刻作用到新元素，旧元素不再被这个效果改样式；CSS 动画和过渡生成的效果，`target` 只能读 |
+| 换元素 | `effect.target = anotherElement` | 立刻作用到新元素，旧元素不再被这个效果改样式；CSS 动画和过渡生成的效果，`target` 只能读 |
 | 换关键帧 | `effect.setKeyframes(keyframes)` | 正在播的动画不重置，按当前进度取新值；格式不对抛 `TypeError`，原关键帧保持不变 |
 | 改时长 | `effect.updateTiming({ duration: 1200 })` | 会连带改变播放状态：缩短到当前时间之前停在结束状态，把已结束的动画拉长会重新跑起来 |
 
